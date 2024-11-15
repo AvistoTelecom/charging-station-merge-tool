@@ -14,7 +14,9 @@ class DataGouvParser(CsvParser):
             'socket_type_2': 'prise_type_2',
             'socket_type_combo_ccs': 'prise_type_combo_ccs',
             'socket_type_chademo': 'prise_type_chademo',
-            'socket_type_autre': 'prise_type_autre'
+            'socket_type_autre': 'prise_type_autre',
+            'id_pdc_itinerance': 'id_pdc_itinerance',
+            'retrive_from': 'data_gouv'
         }
 
         self.parse_csv_file(path_file, mapping_dictionnary)

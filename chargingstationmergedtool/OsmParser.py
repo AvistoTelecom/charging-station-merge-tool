@@ -70,8 +70,12 @@ class OsmParser(AbstractParser):
         borne = {
             "geometry": geometry,
             "power_rated": default_power_rated,
-            "number_of_sockets": int(number_of_sockets)
+            "number_of_sockets": int(number_of_sockets),
+            "retrive_from": "OSM"
         }
+
+        if 'ref:EU:EVSE' in data.keys():
+            borne['id_itinerance'] = data['ref:EU:EVSE'].replace('*', '')
 
         if type_socket + ':output' in data.keys() and is_power_rated_data(data[type_socket + ':output']):
             borne["power_rated"] = extract_power_rated(data[type_socket + ':output'])

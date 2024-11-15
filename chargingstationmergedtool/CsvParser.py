@@ -33,7 +33,9 @@ class CsvParser(AbstractParser):
             'socket_type_2': self.parse_bool(line[mapping_with_index['socket_type_2']]),
             'socket_type_combo_ccs': self.parse_bool(line[mapping_with_index['socket_type_combo_ccs']]),
             'socket_type_chademo': self.parse_bool(line[mapping_with_index['socket_type_chademo']]),
-            'socket_type_autre': self.parse_bool(line[mapping_with_index['socket_type_autre']])
+            'socket_type_autre': self.parse_bool(line[mapping_with_index['socket_type_autre']]),
+            'id_itinerance': line[mapping_with_index['id_pdc_itinerance']],
+            'retrive_from': mapping_with_index['retrive_from']
         }
 
         return borne

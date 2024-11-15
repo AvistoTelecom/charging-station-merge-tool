@@ -72,14 +72,15 @@ class Transform:
             self.__charging_stations = pd.concat([self.__charging_stations, charging_station_record], ignore_index=True)
     
     def export_to_parquet_files(self, prefix_filename: str):
-        # Convert charging_stations to GeoDataFrame to be export into geoparquet
+        # Convert to GeoDataFrame to be export into geoparquet
         charging_stations = gpd.GeoDataFrame(self.__charging_stations, geometry='geometry', crs="EPSG:4326")
+        sockets = gpd.GeoDataFrame(self.__sockets, geometry='geometry', crs="EPSG:4326")
 
-        with open(f"{prefix_filename}_charging_stations.geoparquet", "wb") as f:
+        with open(f"{prefix_filename}_charging_stations.parquet", "wb") as f:
             charging_stations.to_parquet(f)
 
         with open(f"{prefix_filename}_sockets.parquet", "wb") as f:
-            self.__sockets.to_parquet(f)
+            sockets.to_parquet(f)
 
     def transform_to_charging_station(self, index: int, raw_data: dict) -> dict:
         return {
@@ -90,6 +91,7 @@ class Transform:
     def transform_to_socket(self, charging_station_index: int, raw_data: dict) -> dict:
         return {
             "id": str(uuid.uuid4()),
+            "geometry": raw_data["geometry"],
             "power_rated": raw_data["power_rated"],
             "number_of_sockets": raw_data["number_of_sockets"],
             "socket_type_ef": raw_data["socket_type_ef"],
@@ -97,7 +99,9 @@ class Transform:
             "socket_type_combo_ccs": raw_data["socket_type_combo_ccs"],
             "socket_type_chademo": raw_data["socket_type_chademo"],
             "socket_type_autre": raw_data["socket_type_autre"],
-            "charging_station_index": charging_station_index
+            "charging_station_index": charging_station_index,
+            "id_itinerance": raw_data['id_itinerance'],
+            "retrive_from": raw_data['retrive_from']
         }
 
     def append_socket_to_sockets_dataframe(self, socket: dict):
