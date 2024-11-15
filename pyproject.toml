@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "chargingstationmergedtool"
+version = "0.1.0"
+description = ""
+authors = ["vincent DONVAL <vincent.donval@avisto.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+quackosm = "^0.12.0"
+pytest = "^8.3.3"
+geopandas = "^1.0.1"
+geoparquet = "^0.0.3"
+matplotlib = "^3.9.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
