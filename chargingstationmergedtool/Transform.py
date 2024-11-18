@@ -71,15 +71,15 @@ class Transform:
         else:
             self.__charging_stations = pd.concat([self.__charging_stations, charging_station_record], ignore_index=True)
     
-    def export_to_parquet_files(self, prefix_filename: str):
+    def export_to_parquet_files(self, export_directory: str):
         # Convert to GeoDataFrame to be export into geoparquet
         charging_stations = gpd.GeoDataFrame(self.__charging_stations, geometry='geometry', crs="EPSG:4326")
         sockets = gpd.GeoDataFrame(self.__sockets, geometry='geometry', crs="EPSG:4326")
 
-        with open(f"{prefix_filename}_charging_stations.parquet", "wb") as f:
+        with open(f"{export_directory}charging_stations.parquet", "wb") as f:
             charging_stations.to_parquet(f)
 
-        with open(f"{prefix_filename}_sockets.parquet", "wb") as f:
+        with open(f"{export_directory}sockets.parquet", "wb") as f:
             sockets.to_parquet(f)
 
     def transform_to_charging_station(self, index: int, raw_data: dict) -> dict:
@@ -110,7 +110,6 @@ class Transform:
         if self.__sockets is None:
             self.__sockets = socket_record
         else:
-            # TODO: add validation to avoid to add duplicate data
             sockets_already_added_into_this_charging_station = self.__sockets[
                 (self.__sockets["charging_station_index"] == socket["charging_station_index"]) & 
                 (self.__sockets["power_rated"] == socket["power_rated"]) & 

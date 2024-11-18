@@ -39,17 +39,6 @@ class CsvParser(AbstractParser):
         }
 
         return borne
-        
-    # def transform_mapping_index(self, header: list[str], mapping_dictionnary: dict) -> dict:
-    #     mapping_with_index = dict()
-    #     for key, value in mapping_dictionnary.items():
-    #         try:
-    #             index = header.index(value)
-    #             mapping_with_index[key] = index
-    #         except ValueError:
-    #             raise Exception(f"Mapping error with key '{key}' value '{value}' not found into header file")
-
-    #     return mapping_with_index
 
     def parse_bool(self, value: str) -> bool:
         if value.upper() == "TRUE" or value == '1':

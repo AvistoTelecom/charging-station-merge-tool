@@ -1,15 +1,23 @@
 import quackosm as qosm
-import re
+import urllib.request
 import pandas as pd
 import os
 from shapely.geometry import Point
 
 from chargingstationmergedtool.AbstractParser import AbstractParser
+from chargingstationmergedtool.Config import Config
 from chargingstationmergedtool.utils import is_power_rated_data, is_int_data, extract_power_rated
 
 class OsmParser(AbstractParser):
     def __init__(self):
         super().__init__()
+
+    def download_datasource(self, config: Config):
+        datasource_url = "https://download.geofabrik.de/europe/france-latest.osm.pbf"
+
+        config.osm_config["path_file"] = f"{config.export_directory_name}france-latest.osm.pbf"
+
+        urllib.request.urlretrieve(datasource_url, config.osm_config["path_file"])
 
     def load_pbf(self, path_pbf):
         if os.path.exists(path_pbf):

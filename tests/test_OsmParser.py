@@ -1,5 +1,7 @@
 from chargingstationmergedtool.OsmParser import OsmParser
+from chargingstationmergedtool.Config import Config
 from shapely.geometry import Point
+from unittest.mock import patch
 
 def test_extract_borne():
     osm_parser = OsmParser()
@@ -68,3 +70,14 @@ def test_load_data():
 
     osm_parser.load_pbf("/home/vincent/Projets/Deki/implementations/maps/rhone-alpes-latest.osm.pbf")
     assert len(osm_parser.df) > 0
+
+def test_download_datasource():
+    osm_parser = OsmParser()
+    config = Config("tests/ressources/correct_config_need_to_download.json")
+
+    with patch("urllib.request.urlretrieve") as mock_urlretrieve:
+        osm_parser.download_datasource(config)
+
+        assert(config.osm_config["path_file"]) == f"{config.export_directory_name}france-latest.osm.pbf"
+
+    mock_urlretrieve.assert_called_once_with("https://download.geofabrik.de/europe/france-latest.osm.pbf", f"{config.export_directory_name}france-latest.osm.pbf")

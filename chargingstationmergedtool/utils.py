@@ -1,5 +1,4 @@
 import re
-import pandas as pd
 import geopandas as gpd
 
 def is_power_rated_data(value):
@@ -17,3 +16,27 @@ def extract_power_rated(value: str) -> float:
         return float(match[0].replace(',', '.'))
     else:
         return None
+    
+def export_graph_to_svg(charging_station_geo_dataframe: gpd.GeoDataFrame, socket_geo_dataframe: gpd.GeoDataFrame, filename: str):
+    import matplotlib.pyplot as plt
+    from shapely.geometry import box
+
+    fig, ax = plt.subplots()
+
+    fig.set_size_inches(11.69, 8.27)
+
+    min_longitude = -5.14
+    max_longitude = 9.53
+    min_latitude = 41.26
+    max_latitude = 51.09
+
+    # Créer une boîte englobante (bounding box)
+    bbox = box(min_longitude, min_latitude, max_longitude, max_latitude)
+
+    metropole_charging_station = charging_station_geo_dataframe[charging_station_geo_dataframe.geometry.within(bbox)]
+    metropole_sockets = socket_geo_dataframe[socket_geo_dataframe.geometry.within(bbox)]
+
+    metropole_sockets.plot(ax=ax, marker='o', color='red', markersize=0.1)
+    metropole_charging_station.plot(ax=ax, marker='o', color='blue', markersize=0.1)
+
+    plt.savefig(f"{filename}.svg")
