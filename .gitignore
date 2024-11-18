@@ -1,0 +1,7 @@
+.pytest_cache/
+.vscode/
+files/
+**/__pycache__/
+*.parquet
+*.geoparquet
+.coverage
