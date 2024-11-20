@@ -1,5 +1,5 @@
-from chargingstationmergedtool.OsmParser import OsmParser
-from chargingstationmergedtool.DataGouvParser import DataGouvParser
+from chargingstationmergedtool.parser.OsmParser import OsmParser
+from chargingstationmergedtool.parser.DataGouvParser import DataGouvParser
 from chargingstationmergedtool.Transform import Transform
 from chargingstationmergedtool.Config import Config
 from argparse import ArgumentParser

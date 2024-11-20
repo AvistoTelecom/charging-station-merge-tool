@@ -1,4 +1,4 @@
-from chargingstationmergedtool.OsmParser import OsmParser
+from chargingstationmergedtool.parser.OsmParser import OsmParser
 from chargingstationmergedtool.Config import Config
 from shapely.geometry import Point
 from unittest.mock import patch
@@ -73,7 +73,7 @@ def test_load_data():
 
 def test_download_datasource():
     osm_parser = OsmParser()
-    config = Config("tests/ressources/correct_config_need_to_download.json")
+    config = Config("tests/resources/correct_config_need_to_download.json")
 
     with patch("urllib.request.urlretrieve") as mock_urlretrieve:
         osm_parser.download_datasource(config)

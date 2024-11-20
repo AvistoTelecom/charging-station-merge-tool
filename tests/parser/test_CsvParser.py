@@ -1,4 +1,4 @@
-from chargingstationmergedtool.CsvParser import CsvParser
+from chargingstationmergedtool.parser.CsvParser import CsvParser
 from shapely.geometry import Point
 import json
 
@@ -14,10 +14,10 @@ def test_transform_line_to_borne():
             'socket_type_chademo': 'prise_type_chademo',
             'socket_type_autre': 'prise_type_autre',
             'id_pdc_itinerance': 'id_pdc_itinerance',
-            'retrive_from': 'data_gouv',
+            'retrieve_from': 'data_gouv',
         }
 
-    with open('tests/ressources/line_data_gouv.json', 'r') as f:
+    with open('tests/resources/line_data_gouv.json', 'r') as f:
         line = json.load(f)
     csv_parser = CsvParser()
     borne = csv_parser.transform_line_to_borne(line, mapping_dictionnary)
@@ -31,5 +31,5 @@ def test_transform_line_to_borne():
             'socket_type_chademo': False,
             'socket_type_autre': False,
             'id_itinerance': 'ESZUNE1111ER1',
-            'retrive_from': 'data_gouv',
+            'retrieve_from': 'data_gouv',
         }

@@ -2,6 +2,7 @@ import geopandas as gpd
 import pandas as pd
 import numpy as np
 import uuid
+from chargingstationmergedtool.utils import to_geo_dataframe
 
 class Transform:
     def __init__(self):
@@ -73,8 +74,8 @@ class Transform:
     
     def export_to_parquet_files(self, export_directory: str):
         # Convert to GeoDataFrame to be export into geoparquet
-        charging_stations = gpd.GeoDataFrame(self.__charging_stations, geometry='geometry', crs="EPSG:4326")
-        sockets = gpd.GeoDataFrame(self.__sockets, geometry='geometry', crs="EPSG:4326")
+        charging_stations = to_geo_dataframe(self.__charging_stations)
+        sockets = to_geo_dataframe(self.__sockets)
 
         with open(f"{export_directory}charging_stations.parquet", "wb") as f:
             charging_stations.to_parquet(f)
@@ -101,7 +102,7 @@ class Transform:
             "socket_type_autre": raw_data["socket_type_autre"],
             "charging_station_index": charging_station_index,
             "id_itinerance": raw_data['id_itinerance'],
-            "retrive_from": raw_data['retrive_from']
+            "retrieve_from": raw_data['retrieve_from']
         }
 
     def append_socket_to_sockets_dataframe(self, socket: dict):

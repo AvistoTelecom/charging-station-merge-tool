@@ -8,13 +8,20 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 quackosm = "^0.12.0"
-pytest = "^8.3.3"
 geopandas = "^1.0.1"
 geoparquet = "^0.0.3"
 matplotlib = "^3.9.2"
 beautifulsoup4 = "^4.12.3"
-pytest-cov = "^6.0.0"
+sqlalchemy = "^2.0.36"
+jinja2 = "^3.1.4"
+pymongo = "^4.10.1"
+psycopg2 = "^2.9.10"
+geoalchemy2 = "^0.16.0"
 
+
+[tool.poetry.group.test.dependencies]
+pytest-cov = "^6.0.0"
+testcontainers = "^4.8.2"
 
 [build-system]
 requires = ["poetry-core"]

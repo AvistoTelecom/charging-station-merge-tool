@@ -4,8 +4,11 @@ from datetime import datetime
 
 class Config:
     distance: int
+    type_export: str
     osm_config: dict
     data_gouv_config: dict
+    sql_config: dict
+    mongo_config: dict
 
     __key_path_file: str = "path_file"
 
@@ -25,11 +28,14 @@ class Config:
             self._parse_common_block(config_data)
             self.osm_config = self.__extract_default_block(config_data, "osm")
             self.data_gouv_config = self.__extract_default_block(config_data, "data_gouv")
+            self.sql_config = self.__extract_block(config_data, "sql")
+            self.mongo_config = self.__extract_block(config_data, "mongo")
 
     def _parse_common_block(self, config_data: dict):
         block_name = "common"
         common_block = self.__extract_block(config_data, block_name)
         self.distance = self.__extract_key_in_block(common_block, "distance", block_name)
+        self.type_export = self.__extract_key_in_block(common_block, "type_export", block_name)
 
     def __extract_default_block(self, config_data: dict, block_name: str) -> dict:
         block = self.__extract_block(config_data, block_name)
@@ -48,7 +54,6 @@ class Config:
             }
 
         return config
-
     def __extract_key_in_block(self, block: dict, key: str, block_name: str):
         if key not in block.keys():
             raise Exception(f"{key} key not in {block_name} block")

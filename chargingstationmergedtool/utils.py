@@ -1,5 +1,6 @@
 import re
 import geopandas as gpd
+import pandas as pd
 
 def is_power_rated_data(value):
     return re.match("\\d+[\\.,]?\\d*\\s?[kKwW]+", value) is not None
@@ -40,3 +41,6 @@ def export_graph_to_svg(charging_station_geo_dataframe: gpd.GeoDataFrame, socket
     metropole_charging_station.plot(ax=ax, marker='o', color='blue', markersize=0.1)
 
     plt.savefig(f"{filename}.svg")
+
+def to_geo_dataframe(data: pd.DataFrame) -> gpd.GeoDataFrame:
+    return gpd.GeoDataFrame(data, geometry='geometry', crs="EPSG:4326")

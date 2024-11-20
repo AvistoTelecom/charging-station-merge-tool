@@ -4,7 +4,7 @@ import pandas as pd
 import os
 from shapely.geometry import Point
 
-from chargingstationmergedtool.AbstractParser import AbstractParser
+from chargingstationmergedtool.parser.AbstractParser import AbstractParser
 from chargingstationmergedtool.Config import Config
 from chargingstationmergedtool.utils import is_power_rated_data, is_int_data, extract_power_rated
 
@@ -79,7 +79,7 @@ class OsmParser(AbstractParser):
             "geometry": geometry,
             "power_rated": default_power_rated,
             "number_of_sockets": int(number_of_sockets),
-            "retrive_from": "OSM"
+            "retrieve_from": "OSM"
         }
 
         if 'ref:EU:EVSE' in data.keys():

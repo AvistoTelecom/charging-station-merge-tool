@@ -5,3 +5,5 @@ files/
 *.parquet
 *.geoparquet
 .coverage
+dist/
+results/

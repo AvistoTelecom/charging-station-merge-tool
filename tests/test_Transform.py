@@ -120,7 +120,7 @@ def test_transform_to_socket():
         "socket_type_chademo": False,
         "socket_type_autre": False,
         "id_itinerance": 125,
-        "retrive_from": "OSM"
+        "retrieve_from": "OSM"
     }
     
     socket_formatted = transform.transform_to_socket(1, socket)
@@ -134,7 +134,7 @@ def test_transform_to_socket():
     assert(socket_formatted["socket_type_chademo"]) == False
     assert(socket_formatted["socket_type_autre"]) == False
     assert(socket_formatted["id_itinerance"]) == 125
-    assert(socket_formatted["retrive_from"]) == "OSM"
+    assert(socket_formatted["retrieve_from"]) == "OSM"
     assert(socket_formatted["charging_station_index"]) == 1
 
 def test_append_charging_station_to_charging_station_dataframe():
@@ -167,7 +167,7 @@ def test_transform_data():
         'socket_type_chademo': [False, False, False, True, False],
         'socket_type_autre': [False, False, False, False, True],
         'id_itinerance': ["iti1", "iti2", "iti3", "iti4", "iti5"],
-        'retrive_from': ["OSM", "OSM", "DATA_GOUV", "DATA_GOUV", "DATA_GOUV"]
+        'retrieve_from': ["OSM", "OSM", "DATA_GOUV", "DATA_GOUV", "DATA_GOUV"]
     }, crs="EPSG:4326")
 
     merge_dict = {
@@ -210,7 +210,7 @@ def test_group_neighbouring():
         'socket_type_chademo': [False, False, False, True, False, False, False, False, True, False],
         'socket_type_autre': [False, False, False, False, True, False, False, False, False, True],
         'id_itinerance': [f"iti{i+1}" for i in range(10)],
-        'retrive_from': ["OSM", "OSM", "DATA_GOUV", "DATA_GOUV", "DATA_GOUV", "OSM", "DATA_GOUV", "OSM", "DATA_GOUV", "OSM"]
+        'retrieve_from': ["OSM", "OSM", "DATA_GOUV", "DATA_GOUV", "DATA_GOUV", "OSM", "DATA_GOUV", "OSM", "DATA_GOUV", "OSM"]
     }, crs="EPSG:4326")
 
     merge_dict = transform.group_neighbouring(gdf, 1500)

@@ -1,0 +1,9 @@
+CREATE TABLE charging_stations (
+	id int8 NOT NULL,
+	geom public.geometry(point, 4326) NULL
+	CONSTRAINT pk_charging_stations PRIMARY KEY (id)
+);
+
+{% for index, row in charging_stations.iterrows() %}
+INSERT INTO charging_stations(id, geom) VALUES({{ row['id'] }}, '{{ row['geometry'] }}');
+{% endfor %}

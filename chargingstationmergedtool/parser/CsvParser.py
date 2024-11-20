@@ -1,4 +1,4 @@
-from chargingstationmergedtool.AbstractParser import AbstractParser
+from chargingstationmergedtool.parser.AbstractParser import AbstractParser
 from shapely.geometry import Point
 import csv
 import os
@@ -35,7 +35,7 @@ class CsvParser(AbstractParser):
             'socket_type_chademo': self.parse_bool(line[mapping_with_index['socket_type_chademo']]),
             'socket_type_autre': self.parse_bool(line[mapping_with_index['socket_type_autre']]),
             'id_itinerance': line[mapping_with_index['id_pdc_itinerance']],
-            'retrive_from': mapping_with_index['retrive_from']
+            'retrieve_from': mapping_with_index['retrieve_from']
         }
 
         return borne

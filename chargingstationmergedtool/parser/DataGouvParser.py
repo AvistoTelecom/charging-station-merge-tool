@@ -1,4 +1,4 @@
-from chargingstationmergedtool.CsvParser import CsvParser
+from chargingstationmergedtool.parser.CsvParser import CsvParser
 from chargingstationmergedtool.Config import Config
 from bs4 import BeautifulSoup
 import urllib.request
@@ -37,7 +37,7 @@ class DataGouvParser(CsvParser):
             'socket_type_chademo': 'prise_type_chademo',
             'socket_type_autre': 'prise_type_autre',
             'id_pdc_itinerance': 'id_pdc_itinerance',
-            'retrive_from': 'data_gouv'
+            'retrieve_from': 'data_gouv'
         }
 
         self.parse_csv_file(path_file, mapping_dictionnary)

@@ -1,0 +1,22 @@
+{
+    "common": {
+        "distance": 1500,
+        "type_export": "type_export"
+    },
+    "osm": {
+        "path_file": "test.pbf"
+    },
+    "data_gouv": {
+        "path_file": "test/ressources/consolidation-etalab-schema-irve-statique-v-2.3.1-20241113.csv"
+    },
+    "sql": {
+        "connection_url": "connection_url",
+        "charging_stations_table_name": "sql_charging_stations_table_name",
+        "sockets_table_name": "sql_sockets_table_name"
+    },
+    "mongo": {
+        "connection_url": "connection_url",
+        "database_name": "database_name",
+        "charging_stations_collection_name": "mongo_charging_stations_collection_name"
+    }
+}

@@ -1,0 +1,21 @@
+CREATE TABLE sockets (
+	id varchar NOT NULL,
+	geom public.geometry(point, 4326) NULL,
+	power_rated float8 NULL,
+	number_of_sockets int NULL,
+	socket_type_ef bool,
+	socket_type_2 bool,
+	socket_type_combo_ccs bool,
+	socket_type_chademo bool,
+	socket_type_autre bool,
+	charging_station_id id NOT NULL,
+	id_itinerance varchar NULL,
+	retrieve_from varchar NOT NULL,
+	CONSTRAINT pk_sockets PRIMARY KEY (id)
+);
+
+ALTER TABLE sockets ADD CONSTRAINT fk_sockets_charging_stations FOREIGN KEY (charging_station_id) REFERENCES charging_stations(id);
+
+{% for index, row in sockets.iterrows() %}
+INSERT INTO sockets(id, geom, power_rated, number_of_sockets, socket_type_ef, socket_type_2, socket_type_combo_ccs, socket_type_chademo, socket_type_autre, charging_station_id, id_itinerance, retrieve_from) VALUES('{{ row['id'] }}', '{{ row['geometry'] }}', {{ row['power_rated'] }}, {{ row['number_of_sockets'] }}, {{ row['socket_type_ef'] }}, {{ row['socket_type_2'] }}, {{ row['socket_type_combo_ccs'] }}, {{ row['socket_type_chademo'] }}, {{ row['socket_type_autre'] }}, {{ row['charging_station_id'] }}, '{{ row["id_itinerance"] }}', '{{ row["retrieve_from"] }}');
+{% endfor %}

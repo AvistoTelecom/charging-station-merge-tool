@@ -1,14 +1,14 @@
-from chargingstationmergedtool.DataGouvParser import DataGouvParser
+from chargingstationmergedtool.parser.DataGouvParser import DataGouvParser
 from chargingstationmergedtool.Config import Config
 from unittest.mock import patch
 import pytest
 
 def test_download_datasource():
     data_gouv_parser = DataGouvParser()
-    config = Config("tests/ressources/correct_config_need_to_download.json")
+    config = Config("tests/resources/correct_config_need_to_download.json")
 
     with patch("requests.get") as requests_mock:
-        with open('tests/ressources/data_gouv_page.html', 'r') as f:
+        with open('tests/resources/data_gouv_page.html', 'r') as f:
             requests_mock.return_value.status_code = 200
             requests_mock.return_value.text = f.read()
 
@@ -21,7 +21,7 @@ def test_download_datasource():
 
 def test_download_datasource_error():
     data_gouv_parser = DataGouvParser()
-    config = Config("tests/ressources/correct_config_need_to_download.json")
+    config = Config("tests/resources/correct_config_need_to_download.json")
 
     with patch("requests.get") as requests_mock:
         requests_mock.return_value.status_code = 404
@@ -31,7 +31,7 @@ def test_download_datasource_error():
 
 def test_download_datasource_error_retrieve_url():
     data_gouv_parser = DataGouvParser()
-    config = Config("tests/ressources/correct_config_need_to_download.json")
+    config = Config("tests/resources/correct_config_need_to_download.json")
 
     with patch("requests.get") as requests_mock:
         requests_mock.return_value.status_code = 200
