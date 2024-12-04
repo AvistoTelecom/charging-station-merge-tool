@@ -12,6 +12,10 @@ class SqlFileExporter:
             autoescape=select_autoescape()
         )
 
+    def export(self):
+        self.export_charging_stations()
+        self.export_sockets()
+
     def export_charging_stations(self):
         template = self.__env.get_template("sql/charging_stations.sql.j2")
         with open(f"{self.__export_directory_path}{os.sep}charging_stations.sql", 'w') as f:

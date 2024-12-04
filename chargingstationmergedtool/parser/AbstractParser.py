@@ -20,3 +20,6 @@ class AbstractParser():
 
         with open(filename, "wb") as f:
             gdf.to_parquet(f)
+
+    def import_from_geoparquet(self, filename):
+        self.df = pd.read_parquet(filename)

@@ -1,6 +1,8 @@
 import re
 import geopandas as gpd
 import pandas as pd
+import os
+import hashlib
 
 def is_power_rated_data(value):
     return re.match("\\d+[\\.,]?\\d*\\s?[kKwW]+", value) is not None
@@ -44,3 +46,45 @@ def export_graph_to_svg(charging_station_geo_dataframe: gpd.GeoDataFrame, socket
 
 def to_geo_dataframe(data: pd.DataFrame) -> gpd.GeoDataFrame:
     return gpd.GeoDataFrame(data, geometry='geometry', crs="EPSG:4326")
+
+def compare_hash(path_hash_file: str, path_file: str) -> bool:
+    if not os.path.exists(path_hash_file):
+        return False
+    else:
+        with open(path_hash_file, 'r') as f:
+            old_hash = f.read()
+
+        sha256 = hashlib.sha512()
+        BUF_SIZE = 65536  # lets read stuff in 64kb chunks!
+
+        if os.path.exists(path_file):
+            with open(path_file, 'rb') as f:
+                while True:
+                    data = f.read(BUF_SIZE)
+                    if not data:
+                        break
+                    sha256.update(data)
+
+            return old_hash == sha256.hexdigest()
+        return False
+
+def write_hash_file(path_hash_file: str, path_file: str):
+    sha256 = hashlib.sha512()
+    BUF_SIZE = 65536  # lets read stuff in 64kb chunks!
+
+    if not os.path.exists(path_file):
+        raise FileNotFoundError(path_file)
+
+    with open(path_file, 'rb') as f:
+        while True:
+            data = f.read(BUF_SIZE)
+            if not data:
+                break
+            sha256.update(data)
+
+    # clean old hash file
+    if os.path.exists(path_hash_file):
+        os.remove(path_hash_file)
+
+    with open(path_hash_file, 'w') as f:
+        f.write(sha256.hexdigest())

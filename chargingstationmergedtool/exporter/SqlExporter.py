@@ -9,6 +9,10 @@ class SqlExporter:
         self.__sockets = sockets
         self.__engine = create_engine(config["connection_url"])
 
+    def export(self):
+        self.export_charging_stations()
+        self.export_sockets()
+
     def export_charging_stations(self):
         to_geo_dataframe(self.__charging_stations).to_postgis(self.__config['charging_stations_table_name'], self.__engine)
 
