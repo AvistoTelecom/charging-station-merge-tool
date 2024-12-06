@@ -34,7 +34,6 @@ class Transform:
 
         for index1 in range(length):
             if index1 not in index_already_merged:
-                print(f"current index1 = {index1}")
                 index_already_merged.add(index1)
                 merge_dict[index1] = list()
                 point1 = gdf.geometry[index1]

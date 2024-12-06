@@ -22,4 +22,4 @@ class AbstractParser():
             gdf.to_parquet(f)
 
     def import_from_geoparquet(self, filename):
-        self.df = pd.read_parquet(filename)
+        return gpd.read_parquet(filename)

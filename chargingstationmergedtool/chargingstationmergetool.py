@@ -4,7 +4,7 @@ from chargingstationmergedtool.Config import Config
 from chargingstationmergedtool.parser import OsmParser, DataGouvParser
 from chargingstationmergedtool.Transform import Transform
 from chargingstationmergedtool.exporter import *
-from chargingstationmergedtool.utils import compare_hash, write_hash_file
+from chargingstationmergedtool.utils import compare_hash, write_hash_file, extract_path_last_execution, write_path_last_execution
 
 class ChargingStationMergeTools:
     osm_parser_geo_data_frame: gpd.GeoDataFrame
@@ -17,12 +17,15 @@ class ChargingStationMergeTools:
         os.makedirs(self.__config.export_directory_name, exist_ok=True)
 
     def process(self):
+        self.path_last_execution = extract_path_last_execution()
         self.process_osm()
         self.process_data_gouv()
         if not (self.__osm_file_no_change == True and self.__data_gouv_file_no_change == True):
             self.process_transform()
+            write_path_last_execution(self.__config.export_directory_name)
         else:
             print("Files not changed")
+            os.rmdir(self.__config.export_directory_name)
 
     def process_osm(self):
         osm_parser = OsmParser()
@@ -31,7 +34,13 @@ class ChargingStationMergeTools:
             osm_parser.download_datasource(self.__config)
             print("[x] - Download OSM file")
 
-        if compare_hash(f"{self.__config.export_directory_name}osm.hash", self.__config.osm_config["path_file"]):
+        # Filter initial pbf
+        print("[ ] - Filter with osmosis")
+        osm_parser.filtering_with_osmosis(self.__config.osm_config["path_file"], f"{self.__config.export_directory_name}filtered_charging_stations.osm.pbf")
+        self.__config.osm_config["path_file"] = f"{self.__config.export_directory_name}filtered_charging_stations.osm.pbf"
+        print("[x] - Filter with osmosis")
+
+        if self.path_last_execution is None or not compare_hash(f"{self.path_last_execution}osm.hash", self.__config.osm_config["path_file"]):
             print("[ ] - Parse OSM file")
             osm_parser.load_pbf(self.__config.osm_config["path_file"])
             print("[x] - Parse OSM file")
@@ -41,8 +50,7 @@ class ChargingStationMergeTools:
         else:
             print("OSM file no change since last process")
             self.__osm_file_no_change = True
-            osm_parser.import_from_geoparquet(f"{self.__config.export_directory_name}osm.parquet")
-            self.osm_parser_geo_data_frame = osm_parser.convert_to_geoDataFrame()
+            self.osm_parser_geo_data_frame = osm_parser.import_from_geoparquet(f"{self.path_last_execution}osm.parquet")
 
 
     def process_data_gouv(self):
@@ -53,7 +61,7 @@ class ChargingStationMergeTools:
             data_gouv_parser.download_datasource(self.__config)
             print("[x] - Download Data gouv file")
 
-        if compare_hash(f"{self.__config.export_directory_name}data_gouv.hash", self.__config.osm_config["path_file"]):
+        if self.path_last_execution is None or not compare_hash(f"{self.path_last_execution}data_gouv.hash", self.__config.osm_config["path_file"]):
             print("[ ] - Parse Data gouv file")
             data_gouv_parser.parse_file(self.__config.data_gouv_config["path_file"])
             print("[x] - Parse Data gouv file")
@@ -63,8 +71,7 @@ class ChargingStationMergeTools:
         else:
             print("Data gouv file no change since last process")
             self.__data_gouv_file_no_change = True
-            data_gouv_parser.import_from_geoparquet(f"{self.__config.export_directory_name}data_gouv.parquet")
-            self.osm_parser_geo_data_frame = data_gouv_parser.convert_to_geoDataFrame()
+            self.osm_parser_geo_data_frame = data_gouv_parser.import_from_geoparquet(f"{self.path_last_execution}data_gouv.parquet")
 
 
     def process_transform(self):

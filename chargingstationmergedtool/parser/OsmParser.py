@@ -2,7 +2,9 @@ import quackosm as qosm
 import urllib.request
 import pandas as pd
 import os
+import subprocess
 from shapely.geometry import Point
+import shlex
 
 from chargingstationmergedtool.parser.AbstractParser import AbstractParser
 from chargingstationmergedtool.Config import Config
@@ -18,6 +20,25 @@ class OsmParser(AbstractParser):
         config.osm_config["path_file"] = f"{config.export_directory_name}france-latest.osm.pbf"
 
         urllib.request.urlretrieve(datasource_url, config.osm_config["path_file"])
+
+    def filtering_with_osmosis(self, path_intput_pbf: str, path_output_pbf: str):
+        if os.path.exists(path_intput_pbf):
+            subprocess.run([
+                '/usr/bin/osmosis',
+                '--read-pbf',
+                path_intput_pbf,
+                '--tf',
+                'reject-relations',
+                '--tf',
+                'reject-ways',
+                '--tf',
+                'accept-nodes',
+                'amenity=charging_station',
+                '--write-pbf',
+                path_output_pbf
+            ], check=True)
+        else:
+            raise Exception("PBF file not found")
 
     def load_pbf(self, path_pbf):
         if os.path.exists(path_pbf):
@@ -42,7 +63,10 @@ class OsmParser(AbstractParser):
             default_rated_power = None
 
         if 'capacity' in tags.keys():
-            default_capacity = int(tags['capacity'])
+            try:
+                default_capacity = int(tags['capacity'])
+            except ValueError:
+                default_capacity = None
         else:
             default_capacity = None
 

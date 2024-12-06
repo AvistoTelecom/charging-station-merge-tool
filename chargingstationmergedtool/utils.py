@@ -4,6 +4,8 @@ import pandas as pd
 import os
 import hashlib
 
+PATH_LAST_EXECUTION = "results/last_execution"
+
 def is_power_rated_data(value):
     return re.match("\\d+[\\.,]?\\d*\\s?[kKwW]+", value) is not None
 
@@ -88,3 +90,17 @@ def write_hash_file(path_hash_file: str, path_file: str):
 
     with open(path_hash_file, 'w') as f:
         f.write(sha256.hexdigest())
+
+def extract_path_last_execution():
+    if not os.path.exists("results") or not os.path.exists(PATH_LAST_EXECUTION):
+        return None
+    else:
+        with open(PATH_LAST_EXECUTION, "r") as f:
+            return f.read()
+
+def write_path_last_execution(path):
+    if os.path.exists(PATH_LAST_EXECUTION):
+        os.remove(PATH_LAST_EXECUTION)
+    else:
+        with open(PATH_LAST_EXECUTION, "w") as f:
+            f.write(path)
