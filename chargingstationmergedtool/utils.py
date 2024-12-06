@@ -101,6 +101,6 @@ def extract_path_last_execution():
 def write_path_last_execution(path):
     if os.path.exists(PATH_LAST_EXECUTION):
         os.remove(PATH_LAST_EXECUTION)
-    else:
-        with open(PATH_LAST_EXECUTION, "w") as f:
-            f.write(path)
+
+    with open(PATH_LAST_EXECUTION, "w") as f:
+        f.write(path)
