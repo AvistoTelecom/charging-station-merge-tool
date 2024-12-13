@@ -5,10 +5,11 @@
 - French data grouv
 
 ## Requirements:
+### Dependencies
 - [osmosis](https://github.com/openstreetmap/osmosis)
 - poetry
 
-## Install
+### Install
 ```bash
 poetry install
 ```

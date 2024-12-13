@@ -1,3 +1,38 @@
+"""
+Module: OsmParser
+
+This module provides the OsmParser class, which is responsible for downloading,
+filtering, and loading OpenStreetMap (OSM) data related to charging stations.
+
+Imports:
+    - quackosm as qosm
+    - urllib.request
+    - pandas as pd
+    - os
+    - subprocess
+    - shapely.geometry.Point
+    - shlex
+    - chargingstationmergedtool.parser.AbstractParser
+    - chargingstationmergedtool.Config
+    - chargingstationmergedtool.utils
+
+Classes:
+    - OsmParser
+
+License:
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with this program. If not, see <https://www.gnu.org/licenses/>.
+"""
 import quackosm as qosm
 import urllib.request
 import pandas as pd
@@ -11,10 +46,24 @@ from chargingstationmergedtool.Config import Config
 from chargingstationmergedtool.utils import is_power_rated_data, is_int_data, extract_power_rated
 
 class OsmParser(AbstractParser):
+    """
+    A parser for OpenStreetMap data related to charging stations.
+
+    Inherits from AbstractParser.
+    """
     def __init__(self):
+        """
+        Initializes the OsmParser instance.
+        """
         super().__init__()
 
     def download_datasource(self, config: Config):
+        """
+        Downloads the OSM data source for France and saves it to the specified path.
+
+        Parameters:
+            config (Config): The configuration object containing export directory information.
+        """
         datasource_url = "https://download.geofabrik.de/europe/france-latest.osm.pbf"
 
         config.osm_config["path_file"] = f"{config.export_directory_name}france-latest.osm.pbf"
@@ -22,6 +71,16 @@ class OsmParser(AbstractParser):
         urllib.request.urlretrieve(datasource_url, config.osm_config["path_file"])
 
     def filtering_with_osmosis(self, path_intput_pbf: str, path_output_pbf: str):
+        """
+        Filters the input PBF file using Osmosis to retain only charging station nodes.
+
+        Parameters:
+            path_intput_pbf (str): The path to the input PBF file.
+            path_output_pbf (str): The path to save the filtered output PBF file.
+
+        Raises:
+            Exception: If the input PBF file does not exist.
+        """
         if os.path.exists(path_intput_pbf):
             subprocess.run([
                 '/usr/bin/osmosis',
@@ -41,6 +100,15 @@ class OsmParser(AbstractParser):
             raise Exception("PBF file not found")
 
     def load_pbf(self, path_pbf):
+        """
+        Loads the PBF file and extracts charging station data.
+
+        Parameters:
+            path_pbf (str): The path to the PBF file.
+
+        Raises:
+            Exception: If the PBF file does not exist.
+        """
         if os.path.exists(path_pbf):
             data = qosm.convert_pbf_to_geodataframe(path_pbf, tags_filter={"amenity": "charging_station", "way": False}, keep_all_tags=True)
 
@@ -52,6 +120,15 @@ class OsmParser(AbstractParser):
             raise Exception("PBF file not found")
 
     def extract_bornes(self, data_borne: pd.DataFrame) -> list[dict]:
+        """
+        Extracts charging station information from the given data.
+
+        Parameters:
+            data_borne (pd.DataFrame): The DataFrame containing charging station data.
+
+        Returns:
+            list[dict]: A list of dictionaries containing information about each charging station.
+        """
         geometry = data_borne['geometry']
         tags = data_borne['tags']
 
@@ -88,6 +165,20 @@ class OsmParser(AbstractParser):
         return bornes
 
     def extract_socket_as_borne(self, type_socket: str, data: dict, default_power_rated: float, default_capacity: int, geometry: Point) -> dict:
+        """
+        Extracts information about a specific type of socket and returns it as a dictionary.
+
+        Parameters:
+            type_socket (str): The type of socket (e.g., 'socket:type2', 'socket:chademo').
+            data (dict): The dictionary containing the tags associated with the charging station.
+            default_power_rated (float): The default power rating for the charging station.
+            default_capacity (int): The default capacity of the charging station.
+            geometry (Point): The geometry point representing the location of the charging station.
+
+        Returns:
+            dict: A dictionary containing information about the socket, including geometry, power rating,
+                  number of sockets, and other relevant details. Returns None if the socket is not available.
+        """
         number_of_sockets = data[type_socket]
         if number_of_sockets == "no":
             return None

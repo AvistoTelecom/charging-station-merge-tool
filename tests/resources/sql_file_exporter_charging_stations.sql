@@ -1,7 +1,6 @@
 CREATE TABLE charging_stations (
-	id int8 NOT NULL,
+	id int8 NOT NULL PRIMARY KEY,
 	geom public.geometry(point, 4326) NULL
-	CONSTRAINT pk_charging_stations PRIMARY KEY (id)
 );
 
 

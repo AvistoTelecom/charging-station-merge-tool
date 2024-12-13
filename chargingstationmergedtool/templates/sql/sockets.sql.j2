@@ -1,5 +1,5 @@
 CREATE TABLE sockets (
-	id varchar NOT NULL,
+	id varchar NOT NULL PRIMARY KEY,
 	geom public.geometry(point, 4326) NULL,
 	power_rated float8 NULL,
 	number_of_sockets int NULL,
@@ -10,8 +10,7 @@ CREATE TABLE sockets (
 	socket_type_autre bool,
 	charging_station_id id NOT NULL,
 	id_itinerance varchar NULL,
-	retrieve_from varchar NOT NULL,
-	CONSTRAINT pk_sockets PRIMARY KEY (id)
+	retrieve_from varchar NOT NULL
 );
 
 ALTER TABLE sockets ADD CONSTRAINT fk_sockets_charging_stations FOREIGN KEY (charging_station_id) REFERENCES charging_stations(id);
