@@ -44,9 +44,6 @@ class DataGouvParser(CsvParser):
 
     Inherits from CsvParser and implements methods for downloading the data source
     and parsing the CSV file into a suitable format for further processing.
-
-    Attributes:
-        None
     """
 
     def __init__(self):

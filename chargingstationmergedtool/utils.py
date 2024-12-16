@@ -14,17 +14,6 @@ Imports:
 Constants:
     - PATH_LAST_EXECUTION: Path to the last execution record.
 
-Functions:
-    - is_power_rated_data
-    - is_int_data
-    - extract_power_rated
-    - export_graph_to_svg
-    - to_geo_dataframe
-    - compare_hash
-    - write_hash_file
-    - extract_path_last_execution
-    - write_path_last_execution
-
 License:
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published by
@@ -48,7 +37,7 @@ import hashlib
 
 PATH_LAST_EXECUTION = "results/last_execution"
 
-def is_power_rated_data(value):
+def is_power_rated_data(value) -> bool:
     """
     Checks if the given value is a valid power rated data format.
 
@@ -60,7 +49,7 @@ def is_power_rated_data(value):
     """
     return re.match("\\d+[\\.,]?\\d*\\s?[kKwW]+", value) is not None
 
-def is_int_data(value):
+def is_int_data(value) -> bool:
     """
     Checks if the given value is a valid integer format.
 
@@ -195,7 +184,7 @@ def write_hash_file(path_hash_file: str, path_file: str):
     with open(path_hash_file, 'w') as f:
         f.write(sha256.hexdigest())
 
-def extract_path_last_execution():
+def extract_path_last_execution() -> str:
     """
     Extracts the path of the last execution from a file.
 

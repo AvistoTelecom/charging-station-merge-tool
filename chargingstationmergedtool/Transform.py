@@ -11,9 +11,6 @@ Imports:
     - uuid
     - chargingstationmergedtool.utils.to_geo_dataframe
 
-Classes:
-    - Transform
-
 License:
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published by
@@ -51,7 +48,7 @@ class Transform:
         self.__charging_stations = None
         self.__sockets = None
 
-    def get_charging_stations(self):
+    def get_charging_stations(self) -> pd.DataFrame:
         """
         Returns the DataFrame containing charging station records.
 
@@ -60,7 +57,7 @@ class Transform:
         """
         return self.__charging_stations
 
-    def get_sockets(self):
+    def get_sockets(self) -> pd.DataFrame:
         """
         Returns the DataFrame containing socket records.
 

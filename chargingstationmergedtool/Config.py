@@ -9,9 +9,6 @@ Imports:
     - os
     - datetime
 
-Classes:
-    - Config
-
 License:
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published by
@@ -126,7 +123,7 @@ class Config:
 
         return config
 
-    def __extract_key_in_block(self, block: dict, key: str, block_name: str):
+    def __extract_key_in_block(self, block: dict, key: str, block_name: str) -> object:
         """
         Extracts a specific key from a given block of configuration data.
 
@@ -136,7 +133,7 @@ class Config:
             block_name (str): The name of the block for error reporting.
 
         Returns:
-            The value associated with the specified key.
+            (object) The value associated with the specified key.
 
         Raises:
             Exception: If the key is not found in the block.

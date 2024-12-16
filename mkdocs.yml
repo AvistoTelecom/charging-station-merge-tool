@@ -1,0 +1,42 @@
+site_name: Documentation of Charging station merged tool
+nav:
+  - Introduction: index.md
+  - Getting Started:
+      - Installation: user_guide/installation.md
+      - How to use: user_guide/usage.md
+  - Reference:
+      - Classes:
+          - api/config.md
+          - api/transform.md
+          - api/exporters.md
+          - api/parsers.md
+      - Utils: api/utils.md
+  # - Contributeurs: contributors.md
+
+theme:
+  name: readthedocs
+
+markdown_extensions:
+  - toc:
+      permalink: true
+  - admonition
+  - codehilite
+  - footnotes
+
+# extra_css:
+#   - stylesheets/extra.css
+
+# extra_javascript:
+#   - javascripts/extra.js
+
+# Configuration pour le traitement des fichiers Python
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_root: true
+
+# Chemin vers le dossier contenant le code source
+docs_dir: docs

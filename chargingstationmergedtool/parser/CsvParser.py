@@ -54,9 +54,6 @@ class CsvParser(AbstractParser):
 
     Inherits from AbstractParser and implements methods for reading CSV files
     and transforming the data into a suitable format for further processing.
-
-    Attributes:
-        None
     """
     def __init__(self):
         """
