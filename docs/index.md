@@ -12,3 +12,6 @@ Welcome to our Electric Charging Station Data Management Tool. This tool has bee
 This tool is ideal for professionals and researchers looking to analyze charging infrastructure and contribute to the energy transition.
 
 We invite you to explore the features of this tool and integrate it into your projects to optimize the management of charging stations.
+
+## Contact
+[community@avisto.com](mailto:community@avisto.com)
