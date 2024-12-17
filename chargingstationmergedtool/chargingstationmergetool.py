@@ -181,6 +181,9 @@ class ChargingStationMergeTools:
                 exporter = MongoExporter(self.__config.mongo_config, transformer.get_charging_stations(), transformer.get_sockets())
             case "mongo_files":
                 exporter = MongoFileExporter(transformer.get_charging_stations(), transformer.get_sockets(), self.__config.export_directory_name)
+            case "parquet" | "":
+                # already done
+                pass
             case _:
                 raise Exception(f"{self.__config.type_export} is not implemented, allowed value : sql, sql_files, mongo, mongo_files")
             
