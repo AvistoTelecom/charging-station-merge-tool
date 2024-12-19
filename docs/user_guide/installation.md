@@ -1,7 +1,7 @@
 # Install
 ### Dependencies
 - [osmosis](https://github.com/openstreetmap/osmosis)
-- poetry
+- [poetry](https://python-poetry.org/)
 
 ### Install
 ```bash
