@@ -38,6 +38,7 @@ import quackosm as qosm
 from shapely.geometry import Point
 
 from chargingstationmergedtool.config import Config
+from chargingstationmergedtool.exception import DownloadException
 from chargingstationmergedtool.parser.abstractparser import AbstractParser
 from chargingstationmergedtool.utils import (
     extract_power_rated,
@@ -69,7 +70,9 @@ class OsmParser(AbstractParser):
 
         config.osm_config["path_file"] = f"{config.export_directory_name}france-latest.osm.pbf"
 
-        urllib.request.urlretrieve(datasource_url, config.osm_config["path_file"])
+        response = urllib.request.urlretrieve(datasource_url, config.osm_config["path_file"])
+        if response.status_code != 200: 
+            raise DownloadException(f"Error when retrieving URL = {datasource_url}")
 
     def filtering_with_osmosis(self, path_intput_pbf: str, path_output_pbf: str):
         """
@@ -80,7 +83,7 @@ class OsmParser(AbstractParser):
             path_output_pbf (str): The path to save the filtered output PBF file.
 
         Raises:
-            Exception: If the input PBF file does not exist.
+            FileNotFoundError: If the input PBF file does not exist.
         """
         if os.path.exists(path_intput_pbf):
             subprocess.run([
@@ -98,7 +101,7 @@ class OsmParser(AbstractParser):
                 path_output_pbf
             ], check=True)
         else:
-            raise Exception("PBF file not found")
+            raise FileNotFoundError("PBF file not found")
 
     def load_pbf(self, path_pbf):
         """
@@ -108,7 +111,7 @@ class OsmParser(AbstractParser):
             path_pbf (str): The path to the PBF file.
 
         Raises:
-            Exception: If the PBF file does not exist.
+            FileNotFoundError: If the PBF file does not exist.
         """
         if os.path.exists(path_pbf):
             data = qosm.convert_pbf_to_geodataframe(path_pbf, tags_filter={"amenity": "charging_station", "way": False}, keep_all_tags=True)
@@ -118,7 +121,7 @@ class OsmParser(AbstractParser):
                 for borne in self.extract_bornes(row):
                     self.add_borne(borne)
         else:
-            raise Exception("PBF file not found")
+            raise FileNotFoundError("PBF file not found")
 
     def extract_bornes(self, data_borne: pd.DataFrame) -> list[dict]:
         """

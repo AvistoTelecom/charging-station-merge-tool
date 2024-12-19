@@ -8,8 +8,8 @@ def test_extract_power_rated():
     assert(extract_power_rated("3.6 kw")) == 3.6
     assert(extract_power_rated("3,6 kw")) == 3.6
 
-    assert(extract_power_rated("kw")) == None
-    assert(extract_power_rated("")) == None
+    assert(extract_power_rated("kw")) is None
+    assert(extract_power_rated("")) is None
 
 def test_is_power_rated_data():
     assert(is_power_rated_data("22 KW"))

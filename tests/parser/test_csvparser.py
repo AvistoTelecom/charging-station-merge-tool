@@ -1,6 +1,9 @@
-from chargingstationmergedtool.parser import CsvParser
-from shapely.geometry import Point
 import json
+
+from shapely.geometry import Point
+
+from chargingstationmergedtool.parser import CsvParser
+
 
 def test_transform_line_to_borne():
     mapping_dictionnary = {

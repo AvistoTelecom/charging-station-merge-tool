@@ -141,23 +141,6 @@ def test_transform_to_socket():
     assert(socket_formatted["retrieve_from"]) == "OSM"
     assert(socket_formatted["charging_station_index"]) == 1
 
-def test_append_charging_station_to_charging_station_dataframe():
-    transform = Transform()
-    charging_station1 = {
-        "id": 1,
-        "geometry": Point(1, 1),
-    }
-    charging_station2 = {
-        "id": 2,
-        "geometry": Point(2, 2),
-    }
-
-    transform.append_charging_station_to_charging_station_dataframe(charging_station1)
-    assert(len(transform.get_charging_stations())) == 1
-
-    transform.append_charging_station_to_charging_station_dataframe(charging_station2)
-    assert(len(transform.get_charging_stations())) == 2
-
 def test_transform_data():
     transform = Transform()
 

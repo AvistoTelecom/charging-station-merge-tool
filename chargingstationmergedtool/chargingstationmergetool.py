@@ -179,7 +179,7 @@ class ChargingStationMergeTools:
             transformer (Transform): An instance of the Transform class that contains the transformed data.
 
         Raises:
-            Exception: If the specified export type is not implemented.
+            NotImplementedError: If the specified export type is not implemented.
         """
         print("[ ] - Export files to parquet")
         transformer.export_to_parquet_files(self._config.export_directory_name)
@@ -198,6 +198,6 @@ class ChargingStationMergeTools:
                 # already done
                 pass
             case _:
-                raise Exception(f"{self._config.type_export} is not implemented, allowed value : sql, sql_files, mongo, mongo_files")
+                raise NotImplementedError(f"{self._config.type_export} is not implemented, allowed value : sql, sql_files, mongo, mongo_files")
             
         exporter.export()

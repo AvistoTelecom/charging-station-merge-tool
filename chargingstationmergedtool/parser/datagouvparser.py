@@ -39,6 +39,7 @@ from bs4 import BeautifulSoup
 
 from chargingstationmergedtool.config import Config
 from chargingstationmergedtool.parser.csvparser import CsvParser
+from chargingstationmergedtool.exception import DownloadException, DataGouvScrapingException
 
 
 class DataGouvParser(CsvParser):
@@ -80,9 +81,9 @@ class DataGouvParser(CsvParser):
 
                 urllib.request.urlretrieve(datasource_url, config.data_gouv_config["path_file"])
             except Exception as e:
-                raise Exception("Error when parsing Data Gouv body to retrieve download URL") from e
+                raise DataGouvScrapingException("Error when parsing Data Gouv body to retrieve download URL") from e
         else:
-            raise Exception(f"Error when retrieving URL = {base_url}")
+            raise DownloadException(f"Error when retrieving URL = {base_url}")
 
     def parse_file(self, path_file: str):
         """

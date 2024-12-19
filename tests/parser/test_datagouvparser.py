@@ -1,7 +1,14 @@
-from chargingstationmergedtool.parser import DataGouvParser
-from chargingstationmergedtool.config import Config
 from unittest.mock import patch
+
 import pytest
+
+from chargingstationmergedtool.config import Config
+from chargingstationmergedtool.exception import (
+    DataGouvScrapingException,
+    DownloadException,
+)
+from chargingstationmergedtool.parser import DataGouvParser
+
 
 def test_download_datasource():
     data_gouv_parser = DataGouvParser()
@@ -26,7 +33,7 @@ def test_download_datasource_error():
     with patch("requests.get") as requests_mock:
         requests_mock.return_value.status_code = 404
 
-        with pytest.raises(Exception, match="Error when retrieving URL = https://transport.data.gouv.fr/datasets/fichier-consolide-des-bornes-de-recharge-pour-vehicules-electriques"):
+        with pytest.raises(DownloadException, match="Error when retrieving URL = https://transport.data.gouv.fr/datasets/fichier-consolide-des-bornes-de-recharge-pour-vehicules-electriques"):
             data_gouv_parser.download_datasource(config)
 
 def test_download_datasource_error_retrieve_url():
@@ -37,5 +44,5 @@ def test_download_datasource_error_retrieve_url():
         requests_mock.return_value.status_code = 200
         requests_mock.return_value.text = ""
 
-        with pytest.raises(Exception, match="Error when parsing Data Gouv body to retrieve download URL"):
+        with pytest.raises(DataGouvScrapingException, match="Error when parsing Data Gouv body to retrieve download URL"):
             data_gouv_parser.download_datasource(config)

@@ -8,6 +8,7 @@ Imports:
     - json
     - os
     - datetime
+    - chargingstationmergedtool.exception.ConfigParsingException
 
 License:
     This program is free software: you can redistribute it and/or modify
@@ -27,6 +28,8 @@ License:
 import json
 import os
 from datetime import datetime
+
+from chargingstationmergedtool.exception import ConfigParsingException
 
 
 class Config:
@@ -60,10 +63,10 @@ class Config:
             path_config_file (str): The path to the configuration file.
 
         Raises:
-            Exception: If the configuration file does not exist.
+            FileNotFoundError: If the configuration file does not exist.
         """
         if not os.path.exists(path_config_file):
-            raise Exception("Config file not found")
+            raise FileNotFoundError("Config file not found")
         
         self._parse_config_file(path_config_file)
         self.export_directory_name = f"results{os.sep}{datetime.now().strftime('%d_%m_%Y_%H_%M_%S')}{os.sep}"
@@ -137,10 +140,10 @@ class Config:
             (object) The value associated with the specified key.
 
         Raises:
-            Exception: If the key is not found in the block.
+            ConfigParsingException: If the key is not found in the block.
         """
         if key not in block.keys():
-            raise Exception(f"{key} key not in {block_name} block")
+            raise ConfigParsingException(f"{key} key not in {block_name} block")
         
         return block[key]
 
@@ -156,9 +159,9 @@ class Config:
             dict: The dictionary corresponding to the specified block.
 
         Raises:
-            Exception: If the specified block is not found in the configuration data.
+            ConfigParsingException: If the specified block is not found in the configuration data.
         """
         if block_name not in config_data.keys():
-            raise Exception(f"'{block_name}' block not found in config file")
+            raise ConfigParsingException(f"'{block_name}' block not found in config file")
         
         return config_data[block_name]

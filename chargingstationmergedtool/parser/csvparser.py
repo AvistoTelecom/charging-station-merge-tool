@@ -76,7 +76,7 @@ class CsvParser(AbstractParser):
             mapping_dictionnary (dict): A dictionary mapping column names to their indices.
 
         Raises:
-            Exception: If the specified CSV file does not exist.
+            FileNotFoundError: If the specified CSV file does not exist.
         """
         if os.path.exists(path_file):
             with open(path_file, 'r') as f:
@@ -86,7 +86,7 @@ class CsvParser(AbstractParser):
                     borne = self.transform_line_to_borne(line, mapping_dictionnary)
                     self.add_borne(borne)
         else:
-            raise Exception("CSV file not found")
+            raise FileNotFoundError("CSV file not found")
         
 
     def transform_line_to_borne(self, line: list[str], mapping_with_index: dict) -> dict:

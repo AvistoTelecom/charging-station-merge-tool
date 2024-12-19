@@ -1,5 +1,8 @@
-from chargingstationmergedtool.config import Config
 import pytest
+
+from chargingstationmergedtool.config import Config
+from chargingstationmergedtool.exception import ConfigParsingException
+
 
 def test_correct_config_file():
     config = Config("tests/resources/correct_config_need_to_download.json")
@@ -34,13 +37,13 @@ def test_correct_config_file_files_already_exists():
     assert(config.data_gouv_config["path_file"]) == "test/ressources/consolidation-etalab-schema-irve-statique-v-2.3.1-20241113.csv"
 
 def test_common_block_missing():
-    with pytest.raises(Exception, match="'common' block not found in config file") as e:
+    with pytest.raises(ConfigParsingException, match="'common' block not found in config file"):
         Config("tests/resources/incorrect_config.json")
 
 def test_file_not_found():
-    with pytest.raises(Exception, match="Config file not found") as e:
+    with pytest.raises(FileNotFoundError, match="Config file not found"):
         Config("tests/resources/incorrect.json")
 
 def test_key_missing():
-    with pytest.raises(Exception, match="distance key not in common block") as e:
+    with pytest.raises(ConfigParsingException, match="distance key not in common block"):
         Config("tests/resources/incorrect_config2.json")
