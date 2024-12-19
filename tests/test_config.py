@@ -1,4 +1,4 @@
-from chargingstationmergedtool.Config import Config
+from chargingstationmergedtool.config import Config
 import pytest
 
 def test_correct_config_file():

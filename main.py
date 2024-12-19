@@ -38,8 +38,9 @@ License:
     along with this program. If not, see <https://www.gnu.org/licenses/>.
 """
 
-from chargingstationmergedtool.chargingstationmergetool import ChargingStationMergeTools
 from argparse import ArgumentParser
+
+from chargingstationmergedtool.chargingstationmergetool import ChargingStationMergeTools
 
 if __name__ == '__main__':
     parser = ArgumentParser(prog="", description="A tool for merged French charging stations datasources")

@@ -37,7 +37,9 @@ License:
 
 import pandas as pd
 from sqlalchemy import create_engine
+
 from chargingstationmergedtool.utils import to_geo_dataframe
+
 
 class SqlExporter:
     """
@@ -59,10 +61,10 @@ class SqlExporter:
             charging_stations (pd.DataFrame): DataFrame containing charging station data.
             sockets (pd.DataFrame): DataFrame containing socket data.
         """
-        self.__config = config
-        self.__charging_stations = charging_stations
-        self.__sockets = sockets
-        self.__engine = create_engine(config["connection_url"])
+        self._config = config
+        self._charging_stations = charging_stations
+        self._sockets = sockets
+        self._engine = create_engine(config["connection_url"])
 
     def export(self):
         """
@@ -81,7 +83,7 @@ class SqlExporter:
         This method converts the charging stations DataFrame to a GeoDataFrame
         and saves it to the database using the table name specified in the configuration.
         """
-        to_geo_dataframe(self.__charging_stations).to_postgis(self.__config['charging_stations_table_name'], self.__engine)
+        to_geo_dataframe(self._charging_stations).to_postgis(self._config['charging_stations_table_name'], self._engine)
 
     def export_sockets(self):
         """
@@ -90,4 +92,4 @@ class SqlExporter:
         This method converts the sockets DataFrame to a GeoDataFrame
         and saves it to the database using the table name specified in the configuration.
         """
-        to_geo_dataframe(self.__sockets).to_postgis(self.__config['sockets_table_name'], self.__engine)
+        to_geo_dataframe(self._sockets).to_postgis(self._config['sockets_table_name'], self._engine)

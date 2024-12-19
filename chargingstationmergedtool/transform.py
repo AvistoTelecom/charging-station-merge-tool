@@ -5,10 +5,10 @@ This module provides the Transform class, which is responsible for transforming
 and merging charging station and socket data.
 
 Imports:
+    - uuid
     - geopandas as gpd
     - pandas as pd
     - numpy as np
-    - uuid
     - chargingstationmergedtool.utils.to_geo_dataframe
 
 License:
@@ -26,11 +26,14 @@ License:
     along with this program. If not, see <https://www.gnu.org/licenses/>.
 """
 
-import geopandas as gpd
-import pandas as pd
-import numpy as np
 import uuid
+
+import geopandas as gpd
+import numpy as np
+import pandas as pd
+
 from chargingstationmergedtool.utils import to_geo_dataframe
+
 
 class Transform:
     """
@@ -45,8 +48,8 @@ class Transform:
         """
         Initializes the Transform instance with empty charging stations and sockets.
         """
-        self.__charging_stations = None
-        self.__sockets = None
+        self._charging_stations = None
+        self._sockets = None
 
     def get_charging_stations(self) -> pd.DataFrame:
         """
@@ -55,7 +58,7 @@ class Transform:
         Returns:
             pd.DataFrame: The DataFrame of charging stations.
         """
-        return self.__charging_stations
+        return self._charging_stations
 
     def get_sockets(self) -> pd.DataFrame:
         """
@@ -64,7 +67,7 @@ class Transform:
         Returns:
             pd.DataFrame: The DataFrame of sockets.
         """
-        return self.__sockets
+        return self._sockets
 
     def merge_datasources(self, datasource1: gpd.GeoDataFrame, datasource2: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
         """
@@ -138,10 +141,10 @@ class Transform:
             charging_station (dict): A dictionary containing charging station data.
         """
         charging_station_record = pd.DataFrame(charging_station, index=["id"])
-        if self.__charging_stations is None:
-            self.__charging_stations = charging_station_record
+        if self._charging_stations is None:
+            self._charging_stations = charging_station_record
         else:
-            self.__charging_stations = pd.concat([self.__charging_stations, charging_station_record], ignore_index=True)
+            self._charging_stations = pd.concat([self._charging_stations, charging_station_record], ignore_index=True)
     
     def export_to_parquet_files(self, export_directory: str):
         """
@@ -151,14 +154,11 @@ class Transform:
             export_directory (str): The directory where the Parquet files will be saved.
         """
         # Convert to GeoDataFrame to be exported into geoparquet
-        charging_stations = to_geo_dataframe(self.__charging_stations)
-        sockets = to_geo_dataframe(self.__sockets)
+        charging_stations = to_geo_dataframe(self._charging_stations)
+        sockets = to_geo_dataframe(self._sockets)
 
-        with open(f"{export_directory}charging_stations.parquet", "wb") as f:
-            charging_stations.to_parquet(f)
-
-        with open(f"{export_directory}sockets.parquet", "wb") as f:
-            sockets.to_parquet(f)
+        charging_stations.to_parquet(f"{export_directory}charging_stations.parquet")
+        sockets.to_parquet(f"{export_directory}sockets.parquet")
 
     def transform_to_charging_station(self, index: int, raw_data: dict) -> dict:
         """
@@ -176,53 +176,44 @@ class Transform:
             "geometry": raw_data["geometry"]
         }
     
-    def transform_to_socket(self, charging_station_index: int, raw_data: dict) -> dict:
+    def transform_to_socket(self, charging_station_index: int, raw_data: pd.Series) -> pd.Series:
         """
         Transforms raw data into a socket dictionary.
 
         Parameters:
             charging_station_index (int): The index of the associated charging station.
-            raw_data (dict): The raw data for the socket.
+            raw_data (pd.Series): The raw data for the socket.
 
         Returns:
-            dict: A dictionary representing the socket.
+            pd.Series: A dictionary representing the socket.
         """
-        return {
-            "id": str(uuid.uuid4()),
-            "geometry": raw_data["geometry"],
-            "power_rated": raw_data["power_rated"],
-            "number_of_sockets": raw_data["number_of_sockets"],
-            "socket_type_ef": raw_data["socket_type_ef"],
-            "socket_type_2": raw_data["socket_type_2"],
-            "socket_type_combo_ccs": raw_data["socket_type_combo_ccs"],
-            "socket_type_chademo": raw_data["socket_type_chademo"],
-            "socket_type_autre": raw_data["socket_type_autre"],
-            "charging_station_index": charging_station_index,
-            "id_itinerance": raw_data['id_itinerance'],
-            "retrieve_from": raw_data['retrieve_from']
-        }
+        result = raw_data.copy()
+        result["id"] = str(uuid.uuid4())
+        result["charging_station_index"] = charging_station_index
+        
+        return result
 
-    def append_socket_to_sockets_dataframe(self, socket: dict):
+    def append_socket_to_sockets_dataframe(self, socket: pd.Series):
         """
         Appends a socket record to the sockets DataFrame if it does not already exist.
 
         Parameters:
             socket (dict): A dictionary containing socket data.
         """
-        socket_record = pd.DataFrame(socket, index=["id"])
+        socket_record = socket.to_frame().T
 
-        if self.__sockets is None:
-            self.__sockets = socket_record
+        if self._sockets is None:
+            self._sockets = socket_record
         else:
-            sockets_already_added_into_this_charging_station = self.__sockets[
-                (self.__sockets["charging_station_index"] == socket["charging_station_index"]) & 
-                (self.__sockets["power_rated"] == socket["power_rated"]) & 
-                (self.__sockets["socket_type_ef"] == socket["socket_type_ef"]) & 
-                (self.__sockets["socket_type_2"] == socket["socket_type_2"]) & 
-                (self.__sockets["socket_type_combo_ccs"] == socket["socket_type_combo_ccs"]) & 
-                (self.__sockets["socket_type_chademo"] == socket["socket_type_chademo"]) & 
-                (self.__sockets["socket_type_autre"] == socket["socket_type_autre"])
+            sockets_already_added_into_this_charging_station = self._sockets[
+                (self._sockets["charging_station_index"] == socket["charging_station_index"]) & 
+                (self._sockets["power_rated"] == socket["power_rated"]) & 
+                (self._sockets["socket_type_ef"] == socket["socket_type_ef"]) & 
+                (self._sockets["socket_type_2"] == socket["socket_type_2"]) & 
+                (self._sockets["socket_type_combo_ccs"] == socket["socket_type_combo_ccs"]) & 
+                (self._sockets["socket_type_chademo"] == socket["socket_type_chademo"]) & 
+                (self._sockets["socket_type_autre"] == socket["socket_type_autre"])
             ]
 
             if len(sockets_already_added_into_this_charging_station) == 0:
-                self.__sockets = pd.concat([self.__sockets, socket_record], ignore_index=True)
+                self._sockets = pd.concat([self._sockets, socket_record], ignore_index=True)

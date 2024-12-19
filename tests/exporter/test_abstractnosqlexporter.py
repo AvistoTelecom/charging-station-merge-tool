@@ -1,4 +1,4 @@
-from chargingstationmergedtool.exporter.AbstractNoSqlExporter import AbstractNoSqlExporter
+from chargingstationmergedtool.exporter import AbstractNoSqlExporter
 import pandas as pd
 from shapely.geometry import Point
 

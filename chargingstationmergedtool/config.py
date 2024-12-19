@@ -28,6 +28,7 @@ import json
 import os
 from datetime import datetime
 
+
 class Config:
     """
     A class to handle configuration settings for the application.
@@ -49,7 +50,7 @@ class Config:
     sql_config: dict
     mongo_config: dict
 
-    __key_path_file: str = "path_file"
+    _key_path_file: str = "path_file"
 
     def __init__(self, path_config_file: str):
         """
@@ -78,10 +79,10 @@ class Config:
             config_data = json.load(f)
 
             self._parse_common_block(config_data)
-            self.osm_config = self.__extract_default_block(config_data, "osm")
-            self.data_gouv_config = self.__extract_default_block(config_data, "data_gouv")
-            self.sql_config = self.__extract_block(config_data, "sql")
-            self.mongo_config = self.__extract_block(config_data, "mongo")
+            self.osm_config = self._extract_default_block(config_data, "osm")
+            self.data_gouv_config = self._extract_default_block(config_data, "data_gouv")
+            self.sql_config = self._extract_block(config_data, "sql")
+            self.mongo_config = self._extract_block(config_data, "mongo")
 
     def _parse_common_block(self, config_data: dict):
         """
@@ -91,11 +92,11 @@ class Config:
             config_data (dict): The entire configuration data loaded from the JSON file.
         """
         block_name = "common"
-        common_block = self.__extract_block(config_data, block_name)
-        self.distance = self.__extract_key_in_block(common_block, "distance", block_name)
-        self.type_export = self.__extract_key_in_block(common_block, "type_export", block_name)
+        common_block = self._extract_block(config_data, block_name)
+        self.distance = self._extract_key_in_block(common_block, "distance", block_name)
+        self.type_export = self._extract_key_in_block(common_block, "type_export", block_name)
 
-    def __extract_default_block(self, config_data: dict, block_name: str) -> dict:
+    def _extract_default_block(self, config_data: dict, block_name: str) -> dict:
         """
         Extracts a default block from the configuration data.
 
@@ -106,9 +107,9 @@ class Config:
         Returns:
             dict: A dictionary containing the default configuration for the specified block.
         """
-        block = self.__extract_block(config_data, block_name)
+        block = self._extract_block(config_data, block_name)
 
-        path_file = self.__extract_key_in_block(block, self.__key_path_file, block_name)
+        path_file = self._extract_key_in_block(block, self._key_path_file, block_name)
 
         config = {
             "need_to_download": True,
@@ -123,7 +124,7 @@ class Config:
 
         return config
 
-    def __extract_key_in_block(self, block: dict, key: str, block_name: str) -> object:
+    def _extract_key_in_block(self, block: dict, key: str, block_name: str) -> object:
         """
         Extracts a specific key from a given block of configuration data.
 
@@ -143,7 +144,7 @@ class Config:
         
         return block[key]
 
-    def __extract_block(self, config_data: dict, block_name: str) -> dict:
+    def _extract_block(self, config_data: dict, block_name: str) -> dict:
         """
         Extracts a specific block from the configuration data.
 

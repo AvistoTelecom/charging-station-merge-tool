@@ -5,11 +5,11 @@ This module provides utility functions for handling geographic data,
 hashing files, and exporting graphs.
 
 Imports:
+    - hashlib
+    - os
     - re
     - geopandas as gpd
     - pandas as pd
-    - os
-    - hashlib
 
 Constants:
     - PATH_LAST_EXECUTION: Path to the last execution record.
@@ -29,15 +29,16 @@ License:
     along with this program. If not, see <https://www.gnu.org/licenses/>.
 """
 
+import hashlib
+import os
 import re
+
 import geopandas as gpd
 import pandas as pd
-import os
-import hashlib
 
-PATH_LAST_EXECUTION = "results/last_execution"
+PATH_LAST_EXECUTION = f"results{os.sep}last_execution"
 
-def is_power_rated_data(value) -> bool:
+def is_power_rated_data(value: str) -> bool:
     """
     Checks if the given value is a valid power rated data format.
 
@@ -49,7 +50,7 @@ def is_power_rated_data(value) -> bool:
     """
     return re.match("\\d+[\\.,]?\\d*\\s?[kKwW]+", value) is not None
 
-def is_int_data(value) -> bool:
+def is_int_data(value: str) -> bool:
     """
     Checks if the given value is a valid integer format.
 

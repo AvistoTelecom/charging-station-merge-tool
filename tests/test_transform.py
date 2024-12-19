@@ -1,7 +1,11 @@
-from chargingstationmergedtool.Transform import Transform
-from shapely.geometry import Point
-import geopandas as gpd
 import uuid
+
+import geopandas as gpd
+import pandas as pd
+from shapely.geometry import Point
+
+from chargingstationmergedtool.transform import Transform
+
 
 def test_append_charging_station_to_charging_station_dataframe():
     transform = Transform()
@@ -63,11 +67,11 @@ def test_append_socket_to_sockets_dataframe():
 
     assert(transform.get_sockets()) is None
 
-    transform.append_socket_to_sockets_dataframe(socket1)
+    transform.append_socket_to_sockets_dataframe(pd.Series(socket1))
     assert(len(transform.get_sockets())) == 1
-    transform.append_socket_to_sockets_dataframe(socket2)
+    transform.append_socket_to_sockets_dataframe(pd.Series(socket2))
     assert(len(transform.get_sockets())) == 2
-    transform.append_socket_to_sockets_dataframe(socket_duplicate)
+    transform.append_socket_to_sockets_dataframe(pd.Series(socket_duplicate))
     assert(len(transform.get_sockets())) == 2
 
 
@@ -128,11 +132,11 @@ def test_transform_to_socket():
     assert(socket_formatted["geometry"]) == Point(1, 1)
     assert(socket_formatted["power_rated"]) == 22.0
     assert(socket_formatted["number_of_sockets"]) == 2
-    assert(socket_formatted["socket_type_ef"]) == False
-    assert(socket_formatted["socket_type_2"]) == True
-    assert(socket_formatted["socket_type_combo_ccs"]) == False
-    assert(socket_formatted["socket_type_chademo"]) == False
-    assert(socket_formatted["socket_type_autre"]) == False
+    assert(not socket_formatted["socket_type_ef"])
+    assert(socket_formatted["socket_type_2"])
+    assert(not socket_formatted["socket_type_combo_ccs"])
+    assert(not socket_formatted["socket_type_chademo"])
+    assert(not socket_formatted["socket_type_autre"])
     assert(socket_formatted["id_itinerance"]) == 125
     assert(socket_formatted["retrieve_from"]) == "OSM"
     assert(socket_formatted["charging_station_index"]) == 1

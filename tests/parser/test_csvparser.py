@@ -1,4 +1,4 @@
-from chargingstationmergedtool.parser.CsvParser import CsvParser
+from chargingstationmergedtool.parser import CsvParser
 from shapely.geometry import Point
 import json
 

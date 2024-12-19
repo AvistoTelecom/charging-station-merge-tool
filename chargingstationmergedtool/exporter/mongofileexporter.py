@@ -29,10 +29,15 @@ License:
     You should have received a copy of the GNU Lesser General Public License
     along with this program. If not, see <https://www.gnu.org/licenses/>.
 """
+import json
+import os
 
 import pandas as pd
-from chargingstationmergedtool.exporter.AbstractNoSqlExporter import AbstractNoSqlExporter
-import json
+
+from chargingstationmergedtool.exporter.abstractnosqlexporter import (
+    AbstractNoSqlExporter,
+)
+
 
 class MongoFileExporter(AbstractNoSqlExporter):
     """
@@ -52,7 +57,7 @@ class MongoFileExporter(AbstractNoSqlExporter):
             export_directory_path (str): The directory path where the JSON files will be saved.
         """
         super().__init__(charging_stations, sockets)
-        self.__export_directory_path = export_directory_path
+        self._export_directory_path = export_directory_path
 
     def export(self):
         """
@@ -65,5 +70,5 @@ class MongoFileExporter(AbstractNoSqlExporter):
             Exception: If there is an error during the file writing process.
         """
         for charging_station in self.transform_data_to_dict():
-            with open(f"{self.__export_directory_path}/charging_station_{charging_station['id']}.json", 'w') as f:
+            with open(f"{self._export_directory_path}{os.sep}charging_station_{charging_station['id']}.json", 'w') as f:
                 json.dump(charging_station, f, indent=2)

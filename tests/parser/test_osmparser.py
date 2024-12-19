@@ -1,5 +1,5 @@
-from chargingstationmergedtool.parser.OsmParser import OsmParser
-from chargingstationmergedtool.Config import Config
+from chargingstationmergedtool.parser import OsmParser
+from chargingstationmergedtool.config import Config
 from shapely.geometry import Point
 from unittest.mock import patch
 

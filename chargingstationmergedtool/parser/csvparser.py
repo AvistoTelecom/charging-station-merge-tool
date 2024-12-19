@@ -42,11 +42,14 @@ License:
     You should have received a copy of the GNU Lesser General Public License
     along with this program. If not, see <https://www.gnu.org/licenses/>.
 """
-from chargingstationmergedtool.parser.AbstractParser import AbstractParser
-from shapely.geometry import Point
 import csv
 import os
+
+from shapely.geometry import Point
+
+from chargingstationmergedtool.parser.abstractparser import AbstractParser
 from chargingstationmergedtool.utils import extract_power_rated
+
 
 class CsvParser(AbstractParser):
     """

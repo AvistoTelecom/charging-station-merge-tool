@@ -31,12 +31,25 @@ License:
 """
 
 import os
+
 import geopandas as gpd
-from chargingstationmergedtool.Config import Config
-from chargingstationmergedtool.parser import OsmParser, DataGouvParser
-from chargingstationmergedtool.Transform import Transform
-from chargingstationmergedtool.exporter import *
-from chargingstationmergedtool.utils import compare_hash, write_hash_file, extract_path_last_execution, write_path_last_execution
+
+from chargingstationmergedtool.config import Config
+from chargingstationmergedtool.exporter import (
+    MongoExporter,
+    MongoFileExporter,
+    SqlExporter,
+    SqlFileExporter,
+)
+from chargingstationmergedtool.parser import DataGouvParser, OsmParser
+from chargingstationmergedtool.transform import Transform
+from chargingstationmergedtool.utils import (
+    compare_hash,
+    extract_path_last_execution,
+    write_hash_file,
+    write_path_last_execution,
+)
+
 
 class ChargingStationMergeTools:
     """
@@ -56,10 +69,10 @@ class ChargingStationMergeTools:
         Args:
             path_config_file (str): The path to the configuration file.
         """
-        self.__config = Config(path_config_file)
-        self.__osm_file_no_change = False
-        self.__data_gouv_file_no_change = False
-        os.makedirs(self.__config.export_directory_name, exist_ok=True)
+        self._config = Config(path_config_file)
+        self._osm_file_no_change = False
+        self._data_gouv_file_no_change = False
+        os.makedirs(self._config.export_directory_name, exist_ok=True)
 
     def process(self):
         """
@@ -68,39 +81,39 @@ class ChargingStationMergeTools:
         self.path_last_execution = extract_path_last_execution()
         self.process_osm()
         self.process_data_gouv()
-        if not (self.__osm_file_no_change == True and self.__data_gouv_file_no_change == True):
+        if not (self._osm_file_no_change and self._data_gouv_file_no_change):
             self.process_transform()
-            write_path_last_execution(self.__config.export_directory_name)
+            write_path_last_execution(self._config.export_directory_name)
         else:
             print("Files not changed")
-            os.rmdir(self.__config.export_directory_name)
+            os.rmdir(self._config.export_directory_name)
 
     def process_osm(self):
         """
         Processes the OSM data by downloading, filtering, parsing, and exporting it to a GeoDataFrame.
         """
         osm_parser = OsmParser()
-        if self.__config.osm_config["need_to_download"]:
+        if self._config.osm_config["need_to_download"]:
             print("[ ] - Download OSM file")
-            osm_parser.download_datasource(self.__config)
+            osm_parser.download_datasource(self._config)
             print("[x] - Download OSM file")
 
         # Filter initial pbf
         print("[ ] - Filter with osmosis")
-        osm_parser.filtering_with_osmosis(self.__config.osm_config["path_file"], f"{self.__config.export_directory_name}filtered_charging_stations.osm.pbf")
-        self.__config.osm_config["path_file"] = f"{self.__config.export_directory_name}filtered_charging_stations.osm.pbf"
+        osm_parser.filtering_with_osmosis(self._config.osm_config["path_file"], f"{self._config.export_directory_name}filtered_charging_stations.osm.pbf")
+        self._config.osm_config["path_file"] = f"{self._config.export_directory_name}filtered_charging_stations.osm.pbf"
         print("[x] - Filter with osmosis")
 
-        if self.path_last_execution is None or not compare_hash(f"{self.path_last_execution}osm.hash", self.__config.osm_config["path_file"]):
+        if self.path_last_execution is None or not compare_hash(f"{self.path_last_execution}osm.hash", self._config.osm_config["path_file"]):
             print("[ ] - Parse OSM file")
-            osm_parser.load_pbf(self.__config.osm_config["path_file"])
+            osm_parser.load_pbf(self._config.osm_config["path_file"])
             print("[x] - Parse OSM file")
-            osm_parser.export_to_geoparquet(f"{self.__config.export_directory_name}osm.parquet")
+            osm_parser.export_to_geoparquet(f"{self._config.export_directory_name}osm.parquet")
             self.osm_parser_geo_data_frame = osm_parser.convert_to_geoDataFrame()
-            write_hash_file(f"{self.__config.export_directory_name}osm.hash", self.__config.osm_config["path_file"])
+            write_hash_file(f"{self._config.export_directory_name}osm.hash", self._config.osm_config["path_file"])
         else:
             print("OSM file no change since last process")
-            self.__osm_file_no_change = True
+            self._osm_file_no_change = True
             self.osm_parser_geo_data_frame = osm_parser.import_from_geoparquet(f"{self.path_last_execution}osm.parquet")
 
 
@@ -110,21 +123,21 @@ class ChargingStationMergeTools:
         """
         data_gouv_parser = DataGouvParser()
 
-        if self.__config.data_gouv_config["need_to_download"]:
+        if self._config.data_gouv_config["need_to_download"]:
             print("[ ] - Download Data gouv file")
-            data_gouv_parser.download_datasource(self.__config)
+            data_gouv_parser.download_datasource(self._config)
             print("[x] - Download Data gouv file")
 
-        if self.path_last_execution is None or not compare_hash(f"{self.path_last_execution}data_gouv.hash", self.__config.osm_config["path_file"]):
+        if self.path_last_execution is None or not compare_hash(f"{self.path_last_execution}data_gouv.hash", self._config.osm_config["path_file"]):
             print("[ ] - Parse Data gouv file")
-            data_gouv_parser.parse_file(self.__config.data_gouv_config["path_file"])
+            data_gouv_parser.parse_file(self._config.data_gouv_config["path_file"])
             print("[x] - Parse Data gouv file")
-            data_gouv_parser.export_to_geoparquet(f"{self.__config.export_directory_name}data_gouv.parquet")
+            data_gouv_parser.export_to_geoparquet(f"{self._config.export_directory_name}data_gouv.parquet")
             self.data_gouv_geo_data_frame = data_gouv_parser.convert_to_geoDataFrame()
-            write_hash_file(f"{self.__config.export_directory_name}data_gouv.hash", self.__config.osm_config["path_file"])
+            write_hash_file(f"{self._config.export_directory_name}data_gouv.hash", self._config.osm_config["path_file"])
         else:
             print("Data gouv file no change since last process")
-            self.__data_gouv_file_no_change = True
+            self._data_gouv_file_no_change = True
             self.osm_parser_geo_data_frame = data_gouv_parser.import_from_geoparquet(f"{self.path_last_execution}data_gouv.parquet")
 
 
@@ -142,11 +155,11 @@ class ChargingStationMergeTools:
         transformer = Transform()
         print("[ ] - Merge datasources")
         combined_datasource = transformer.merge_datasources(self.osm_parser_geo_data_frame, self.data_gouv_geo_data_frame)
-        combined_datasource.to_parquet(f"{self.__config.export_directory_name}combined.parquet")
+        combined_datasource.to_parquet(f"{self._config.export_directory_name}combined.parquet")
         print("[x] - Merge datasources")
 
         print("[ ] - Group neighbors")
-        merge_dict = transformer.group_neighbouring(combined_datasource, self.__config.distance)
+        merge_dict = transformer.group_neighbouring(combined_datasource, self._config.distance)
         print("[x] - Group neighbors")
 
         print("[ ] - Transform data")
@@ -169,22 +182,22 @@ class ChargingStationMergeTools:
             Exception: If the specified export type is not implemented.
         """
         print("[ ] - Export files to parquet")
-        transformer.export_to_parquet_files(self.__config.export_directory_name)
+        transformer.export_to_parquet_files(self._config.export_directory_name)
         print("[x] - Export files to parquet")
 
-        match self.__config.type_export:
+        match self._config.type_export:
             case "sql":
-                exporter = SqlExporter(self.__config.sql_config, transformer.get_charging_stations(), transformer.get_sockets())
+                exporter = SqlExporter(self._config.sql_config, transformer.get_charging_stations(), transformer.get_sockets())
             case "sql_files":
-                exporter = SqlFileExporter(transformer.get_charging_stations(), transformer.get_sockets(), self.__config.export_directory_name)
+                exporter = SqlFileExporter(transformer.get_charging_stations(), transformer.get_sockets(), self._config.export_directory_name)
             case "mongo":
-                exporter = MongoExporter(self.__config.mongo_config, transformer.get_charging_stations(), transformer.get_sockets())
+                exporter = MongoExporter(self._config.mongo_config, transformer.get_charging_stations(), transformer.get_sockets())
             case "mongo_files":
-                exporter = MongoFileExporter(transformer.get_charging_stations(), transformer.get_sockets(), self.__config.export_directory_name)
+                exporter = MongoFileExporter(transformer.get_charging_stations(), transformer.get_sockets(), self._config.export_directory_name)
             case "parquet" | "":
                 # already done
                 pass
             case _:
-                raise Exception(f"{self.__config.type_export} is not implemented, allowed value : sql, sql_files, mongo, mongo_files")
+                raise Exception(f"{self._config.type_export} is not implemented, allowed value : sql, sql_files, mongo, mongo_files")
             
         exporter.export()

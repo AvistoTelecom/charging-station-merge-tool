@@ -32,11 +32,14 @@ License:
     along with this program. If not, see <https://www.gnu.org/licenses/>.
 """
 
-from chargingstationmergedtool.parser.CsvParser import CsvParser
-from chargingstationmergedtool.Config import Config
-from bs4 import BeautifulSoup
 import urllib.request
+
 import requests
+from bs4 import BeautifulSoup
+
+from chargingstationmergedtool.config import Config
+from chargingstationmergedtool.parser.csvparser import CsvParser
+
 
 class DataGouvParser(CsvParser):
     """

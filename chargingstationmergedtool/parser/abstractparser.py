@@ -36,8 +36,9 @@ License:
     along with this program. If not, see <https://www.gnu.org/licenses/>.
 """
 
-import pandas as pd
 import geopandas as gpd
+import pandas as pd
+
 
 class AbstractParser:
     """

@@ -5,13 +5,12 @@ This module provides the OsmParser class, which is responsible for downloading,
 filtering, and loading OpenStreetMap (OSM) data related to charging stations.
 
 Imports:
-    - quackosm as qosm
-    - urllib.request
-    - pandas as pd
     - os
     - subprocess
+    - urllib.request
+    - pandas as pd
+    - quackosm as qosm
     - shapely.geometry.Point
-    - shlex
     - chargingstationmergedtool.parser.AbstractParser
     - chargingstationmergedtool.Config
     - chargingstationmergedtool.utils
@@ -30,17 +29,22 @@ License:
     You should have received a copy of the GNU Lesser General Public License
     along with this program. If not, see <https://www.gnu.org/licenses/>.
 """
-import quackosm as qosm
-import urllib.request
-import pandas as pd
 import os
 import subprocess
-from shapely.geometry import Point
-import shlex
+import urllib.request
 
-from chargingstationmergedtool.parser.AbstractParser import AbstractParser
-from chargingstationmergedtool.Config import Config
-from chargingstationmergedtool.utils import is_power_rated_data, is_int_data, extract_power_rated
+import pandas as pd
+import quackosm as qosm
+from shapely.geometry import Point
+
+from chargingstationmergedtool.config import Config
+from chargingstationmergedtool.parser.abstractparser import AbstractParser
+from chargingstationmergedtool.utils import (
+    extract_power_rated,
+    is_int_data,
+    is_power_rated_data,
+)
+
 
 class OsmParser(AbstractParser):
     """
@@ -128,21 +132,21 @@ class OsmParser(AbstractParser):
         """
         geometry = data_borne['geometry']
         tags = data_borne['tags']
+        default_rated_power = None
+        default_capacity = None
 
         bornes = list()
 
         if 'charging_station:output' in tags.keys():
             default_rated_power = extract_power_rated(tags['charging_station:output'])
-        else:
-            default_rated_power = None
+            
 
         if 'capacity' in tags.keys():
             try:
                 default_capacity = int(tags['capacity'])
             except ValueError:
                 default_capacity = None
-        else:
-            default_capacity = None
+            
 
         type_sockets = [
             'socket:type2_combo',

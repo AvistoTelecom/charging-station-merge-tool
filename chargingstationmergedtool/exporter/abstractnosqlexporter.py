@@ -38,6 +38,7 @@ License:
 
 import pandas as pd
 
+
 class AbstractNoSqlExporter:
     """
     A class to handle the transformation of charging station and socket data for NoSQL export.
@@ -55,8 +56,8 @@ class AbstractNoSqlExporter:
             charging_stations (pd.DataFrame): DataFrame containing charging station data.
             sockets (pd.DataFrame): DataFrame containing socket data.
         """
-        self.__charging_stations = charging_stations
-        self.__sockets = sockets
+        self._charging_stations = charging_stations
+        self._sockets = sockets
 
     def transform_data_to_dict(self) -> list[dict]:
         """
@@ -69,13 +70,13 @@ class AbstractNoSqlExporter:
         """
         results = list()
 
-        for _, row in self.__charging_stations.iterrows():
-            id = row['id']
+        for _, row in self._charging_stations.iterrows():
+            charging_station_id = row['id']
             results.append({
-                "id": id,
+                "id": charging_station_id,
                 "latitude": row['geometry'].y,
                 "longitude": row['geometry'].x,
-                "sockets": self.extract_sockets(id)
+                "sockets": self.extract_sockets(charging_station_id)
             })
 
         return results
@@ -95,7 +96,7 @@ class AbstractNoSqlExporter:
         """
         results = list()
 
-        for _, row in self.__sockets[self.__sockets['charging_station_id'] == charging_station_id].iterrows():
+        for _, row in self._sockets[self._sockets['charging_station_id'] == charging_station_id].iterrows():
             results.append({
                 "id": row['id'],
                 "latitude": row['geometry'].y,

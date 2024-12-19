@@ -1,4 +1,4 @@
-from chargingstationmergedtool.exporter.SqlFileExporter import SqlFileExporter
+from chargingstationmergedtool.exporter import SqlFileExporter
 import pandas as pd
 from shapely.geometry import Point
 import tempfile

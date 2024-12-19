@@ -36,8 +36,12 @@ License:
 """
 
 import pandas as pd
-from chargingstationmergedtool.exporter.AbstractNoSqlExporter import AbstractNoSqlExporter
 from pymongo import MongoClient
+
+from chargingstationmergedtool.exporter.abstractnosqlexporter import (
+    AbstractNoSqlExporter,
+)
+
 
 class MongoExporter(AbstractNoSqlExporter):
     """
@@ -58,8 +62,8 @@ class MongoExporter(AbstractNoSqlExporter):
             sockets (pd.DataFrame): DataFrame containing socket data.
         """
         super().__init__(charging_stations, sockets)
-        self.__config = config
-        self.__client = MongoClient(config['connection_url'], timeoutMS=7200)
+        self._config = config
+        self._client = MongoClient(config['connection_url'], timeoutMS=7200)
 
     def export(self):
         """
@@ -71,7 +75,7 @@ class MongoExporter(AbstractNoSqlExporter):
         Raises:
             Exception: If there is an error during the export process.
         """
-        db = self.__client.get_database(self.__config['database_name'])
-        collection = db.get_collection(self.__config['charging_stations_collection_name'])
+        db = self._client.get_database(self._config['database_name'])
+        collection = db.get_collection(self._config['charging_stations_collection_name'])
 
         collection.insert_many(self.transform_data_to_dict())

@@ -1,17 +1,11 @@
-from chargingstationmergedtool.exporter.MongoExporter import MongoExporter
-from testcontainers.mongodb import MongoDbContainer
+from chargingstationmergedtool.exporter import MongoFileExporter
 import pandas as pd
 from shapely.geometry import Point
-from pymongo import MongoClient
+import tempfile
+import os
 
 def test_export():
-    with MongoDbContainer("mongo:8", dbname="database_name") as mongodb:
-        config = {
-            "connection_url": mongodb.get_connection_url(),
-            "database_name": mongodb.dbname,
-            "charging_stations_collection_name": "charging_stations_collection_name"
-        }
-
+    with tempfile.TemporaryDirectory() as tmp_dir_name:
         charging_stations = pd.DataFrame({
             'id': [0, 1],
             'geometry': [Point(-61.72048, 15.999102), Point(-61.605293, 16.20394)]
@@ -46,10 +40,7 @@ def test_export():
             'retrieve_from': ["OSM", "OSM", "DATA_GOUV", "DATA_GOUV", "DATA_GOUV", "OSM", "DATA_GOUV", "OSM", "DATA_GOUV", "OSM"]
         })
 
-        exporter = MongoExporter(config, charging_stations, sockets)
+        exporter = MongoFileExporter(charging_stations, sockets, tmp_dir_name)
         exporter.export()
 
-        with MongoClient(config['connection_url'].replace('localhost', mongodb.get_container_host_ip())) as client:
-            db = client.get_database(config['database_name'])
-            collection = db.get_collection(config['charging_stations_collection_name'])
-            assert(collection.estimated_document_count()) == 2
+        assert(len(os.listdir(tmp_dir_name))) == 2

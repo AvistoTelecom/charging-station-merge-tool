@@ -30,9 +30,11 @@ License:
     along with this program. If not, see <https://www.gnu.org/licenses/>.
 """
 
+import os
+
 import pandas as pd
 from jinja2 import Environment, PackageLoader, select_autoescape
-import os
+
 
 class SqlFileExporter:
     """
@@ -54,10 +56,10 @@ class SqlFileExporter:
             sockets (pd.DataFrame): DataFrame containing socket data.
             export_directory_path (str): The directory path where the SQL files will be saved.
         """
-        self.__export_directory_path = export_directory_path
-        self.__charging_stations = charging_stations
-        self.__sockets = sockets
-        self.__env = Environment(
+        self._export_directory_path = export_directory_path
+        self._charging_stations = charging_stations
+        self._sockets = sockets
+        self._env = Environment(
             loader=PackageLoader("chargingstationmergedtool"),
             autoescape=select_autoescape()
         )
@@ -80,9 +82,9 @@ class SqlFileExporter:
         charging station data and saves it to a file named 'charging_stations.sql'
         in the specified export directory.
         """
-        template = self.__env.get_template("sql/charging_stations.sql.j2")
-        with open(f"{self.__export_directory_path}{os.sep}charging_stations.sql", 'w') as f:
-            f.write(template.render(charging_stations=self.__charging_stations))
+        template = self._env.get_template(f"sql{os.sep}charging_stations.sql.j2")
+        with open(f"{self._export_directory_path}{os.sep}charging_stations.sql", 'w') as f:
+            f.write(template.render(charging_stations=self._charging_stations))
 
     def export_sockets(self):
         """
@@ -92,6 +94,6 @@ class SqlFileExporter:
         socket data and saves it to a file named 'sockets.sql' in the specified
         export directory.
         """
-        template = self.__env.get_template("sql/sockets.sql.j2")
-        with open(f"{self.__export_directory_path}{os.sep}sockets.sql", 'w') as f:
-            f.write(template.render(sockets=self.__sockets))
+        template = self._env.get_template(f"sql{os.sep}sockets.sql.j2")
+        with open(f"{self._export_directory_path}{os.sep}sockets.sql", 'w') as f:
+            f.write(template.render(sockets=self._sockets))
