@@ -47,8 +47,8 @@ import os
 
 from shapely.geometry import Point
 
-from chargingstationmergedtool.parser.abstractparser import AbstractParser
-from chargingstationmergedtool.utils import extract_power_rated
+from src.parser.abstractparser import AbstractParser
+from src.utils import extract_power_rated
 
 
 class CsvParser(AbstractParser):

@@ -34,7 +34,7 @@ import os
 
 import pandas as pd
 
-from chargingstationmergedtool.exporter.abstractnosqlexporter import (
+from src.exporter.abstractnosqlexporter import (
     AbstractNoSqlExporter,
 )
 

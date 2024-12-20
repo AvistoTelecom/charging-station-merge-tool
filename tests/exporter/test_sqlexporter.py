@@ -1,5 +1,5 @@
 from testcontainers.postgres import PostgresContainer
-from chargingstationmergedtool.exporter import SqlExporter
+from src.exporter import SqlExporter
 import pandas as pd
 from shapely.geometry import Point
 import sqlalchemy

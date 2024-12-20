@@ -34,16 +34,16 @@ import os
 
 import geopandas as gpd
 
-from chargingstationmergedtool.config import Config
-from chargingstationmergedtool.exporter import (
+from src.config import Config
+from src.exporter import (
     MongoExporter,
     MongoFileExporter,
     SqlExporter,
     SqlFileExporter,
 )
-from chargingstationmergedtool.parser import DataGouvParser, OsmParser
-from chargingstationmergedtool.transform import Transform
-from chargingstationmergedtool.utils import (
+from src.parser import DataGouvParser, OsmParser
+from src.transform import Transform
+from src.utils import (
     compare_hash,
     extract_path_last_execution,
     write_hash_file,

@@ -2,12 +2,12 @@ from unittest.mock import patch
 
 import pytest
 
-from chargingstationmergedtool.config import Config
-from chargingstationmergedtool.exception import (
+from src.config import Config
+from src.exception import (
     DataGouvScrapingException,
     DownloadException,
 )
-from chargingstationmergedtool.parser import DataGouvParser
+from src.parser import DataGouvParser
 
 
 def test_download_datasource():

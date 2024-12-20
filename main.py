@@ -40,7 +40,7 @@ License:
 
 from argparse import ArgumentParser
 
-from chargingstationmergedtool.chargingstationmergetool import ChargingStationMergeTools
+from src.chargingstationmergetool import ChargingStationMergeTools
 
 if __name__ == '__main__':
     parser = ArgumentParser(prog="", description="A tool for merged French charging stations datasources")

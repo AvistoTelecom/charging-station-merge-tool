@@ -3,9 +3,9 @@ from unittest.mock import patch
 import pytest
 from shapely.geometry import Point
 
-from chargingstationmergedtool.config import Config
-from chargingstationmergedtool.exception import DownloadException
-from chargingstationmergedtool.parser import OsmParser
+from src.config import Config
+from src.exception import DownloadException
+from src.parser import OsmParser
 
 
 def test_extract_borne():

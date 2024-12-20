@@ -29,7 +29,7 @@ import json
 import os
 from datetime import datetime
 
-from chargingstationmergedtool.exception import ConfigParsingException
+from src.exception import ConfigParsingException
 
 
 class Config:

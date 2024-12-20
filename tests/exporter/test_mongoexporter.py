@@ -1,4 +1,4 @@
-from chargingstationmergedtool.exporter import MongoExporter
+from src.exporter import MongoExporter
 from testcontainers.mongodb import MongoDbContainer
 import pandas as pd
 from shapely.geometry import Point

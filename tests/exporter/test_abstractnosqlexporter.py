@@ -1,4 +1,4 @@
-from chargingstationmergedtool.exporter import AbstractNoSqlExporter
+from src.exporter import AbstractNoSqlExporter
 import pandas as pd
 from shapely.geometry import Point
 
@@ -46,11 +46,11 @@ def test_extract_sockets():
     assert(results[0]["latitude"]) == 48.8738
     assert(results[0]["power_rated"]) == 60.0
     assert(results[0]["number_of_sockets"]) == 2
-    assert(results[0]["socket_type_ef"]) == False
-    assert(results[0]["socket_type_2"]) == True
-    assert(results[0]["socket_type_combo_ccs"]) == False
-    assert(results[0]["socket_type_chademo"]) == False
-    assert(results[0]["socket_type_autre"]) == True
+    assert(not results[0]["socket_type_ef"])
+    assert(results[0]["socket_type_2"])
+    assert(not results[0]["socket_type_combo_ccs"])
+    assert(not results[0]["socket_type_chademo"])
+    assert(results[0]["socket_type_autre"])
     assert(results[0]["id_itinerance"]) == "iti10"
     assert(results[0]["retrieve_from"]) == "OSM"
 

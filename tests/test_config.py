@@ -1,7 +1,7 @@
 import pytest
 
-from chargingstationmergedtool.config import Config
-from chargingstationmergedtool.exception import ConfigParsingException
+from src.config import Config
+from src.exception import ConfigParsingException
 
 
 def test_correct_config_file():

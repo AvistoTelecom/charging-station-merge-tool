@@ -1,0 +1,3 @@
+from src.exception.configparsingexception import ConfigParsingException
+from src.exception.datagouvscrapingexception import DataGouvScrapingException
+from src.exception.downloadexception import DownloadException

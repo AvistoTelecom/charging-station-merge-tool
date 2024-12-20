@@ -38,7 +38,7 @@ License:
 import pandas as pd
 from sqlalchemy import create_engine
 
-from chargingstationmergedtool.utils import to_geo_dataframe
+from src.utils import to_geo_dataframe
 
 
 class SqlExporter:

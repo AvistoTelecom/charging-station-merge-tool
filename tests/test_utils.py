@@ -1,4 +1,4 @@
-from chargingstationmergedtool.utils import extract_power_rated, is_power_rated_data, is_int_data, compare_hash, write_hash_file
+from src.utils import extract_power_rated, is_power_rated_data, is_int_data, compare_hash, write_hash_file
 import os
 import pytest
 

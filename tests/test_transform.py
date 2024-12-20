@@ -4,7 +4,7 @@ import geopandas as gpd
 import pandas as pd
 from shapely.geometry import Point
 
-from chargingstationmergedtool.transform import Transform
+from src.transform import Transform
 
 
 def test_append_charging_station_to_charging_station_dataframe():

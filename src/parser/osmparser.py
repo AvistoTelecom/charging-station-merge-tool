@@ -37,10 +37,10 @@ import pandas as pd
 import quackosm as qosm
 from shapely.geometry import Point
 
-from chargingstationmergedtool.config import Config
-from chargingstationmergedtool.exception import DownloadException
-from chargingstationmergedtool.parser.abstractparser import AbstractParser
-from chargingstationmergedtool.utils import (
+from src.config import Config
+from src.exception import DownloadException
+from src.parser.abstractparser import AbstractParser
+from src.utils import (
     extract_power_rated,
     is_int_data,
     is_power_rated_data,

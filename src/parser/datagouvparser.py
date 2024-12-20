@@ -37,9 +37,9 @@ import urllib.request
 import requests
 from bs4 import BeautifulSoup
 
-from chargingstationmergedtool.config import Config
-from chargingstationmergedtool.parser.csvparser import CsvParser
-from chargingstationmergedtool.exception import DownloadException, DataGouvScrapingException
+from src.config import Config
+from src.parser.csvparser import CsvParser
+from src.exception import DownloadException, DataGouvScrapingException
 
 
 class DataGouvParser(CsvParser):

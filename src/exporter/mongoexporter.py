@@ -38,7 +38,7 @@ License:
 import pandas as pd
 from pymongo import MongoClient
 
-from chargingstationmergedtool.exporter.abstractnosqlexporter import (
+from src.exporter.abstractnosqlexporter import (
     AbstractNoSqlExporter,
 )
 

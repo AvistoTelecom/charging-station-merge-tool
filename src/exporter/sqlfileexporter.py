@@ -60,7 +60,7 @@ class SqlFileExporter:
         self._charging_stations = charging_stations
         self._sockets = sockets
         self._env = Environment(
-            loader=PackageLoader("chargingstationmergedtool"),
+            loader=PackageLoader("src"),
             autoescape=select_autoescape()
         )
 

@@ -1,3 +1,0 @@
-from chargingstationmergedtool.parser.datagouvparser import DataGouvParser
-from chargingstationmergedtool.parser.osmparser import OsmParser
-from chargingstationmergedtool.parser.csvparser import CsvParser
