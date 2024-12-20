@@ -1,3 +1,3 @@
 # Config
 
-::: chargingstationmergedtool.Config
+::: chargingstationmergedtool.config

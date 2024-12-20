@@ -1,6 +1,6 @@
 # Parsers
 
-::: chargingstationmergedtool.parser.AbstractParser
-::: chargingstationmergedtool.parser.CsvParser
-::: chargingstationmergedtool.parser.DataGouvParser
-::: chargingstationmergedtool.parser.OsmParser
+::: chargingstationmergedtool.parser.abstractparser
+::: chargingstationmergedtool.parser.csvparser
+::: chargingstationmergedtool.parser.datagouvparser
+::: chargingstationmergedtool.parser.osmparser

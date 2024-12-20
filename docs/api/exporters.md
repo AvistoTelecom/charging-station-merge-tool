@@ -1,7 +1,7 @@
 # Exporters
 
-::: chargingstationmergedtool.exporter.AbstractNoSqlExporter
-::: chargingstationmergedtool.exporter.MongoExporter
-::: chargingstationmergedtool.exporter.MongoFileExporter
-::: chargingstationmergedtool.exporter.SqlExporter
-::: chargingstationmergedtool.exporter.SqlFileExporter
+::: chargingstationmergedtool.exporter.abstractnosqlexporter
+::: chargingstationmergedtool.exporter.mongoexporter
+::: chargingstationmergedtool.exporter.mongofileexporter
+::: chargingstationmergedtool.exporter.sqlexporter
+::: chargingstationmergedtool.exporter.sqlfileexporter
